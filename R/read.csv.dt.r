@@ -8,6 +8,7 @@
 #' @keywords csv
 #' @export
 #' @examples
+#' imported.data.table <- read.csv.dt("./csvs/test.csv")
 
 read.csv.dt<-function(file, datadir= "./data/", sep=",", header=TRUE){
   require(data.table)
@@ -20,4 +21,5 @@ read.csv.dt<-function(file, datadir= "./data/", sep=",", header=TRUE){
   tmp <- data.table(read.csv(file, sep=sep, header=header, fileEncoding="UTF-8-BOM"))
   return(tmp)
 }
+
 

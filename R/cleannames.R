@@ -5,6 +5,8 @@
 #' @keywords dataManagement
 #' @export
 #' @examples
+#' df <- data.frame("f f"=c(1,1), "G&G"=c(5,2))
+#' df_cleaned <- cleannames(df)
 cleannames=function(df) {
   x <- as.character(names(df))
   x <- tolower(x)
@@ -18,3 +20,7 @@ cleannames=function(df) {
 
   names(df)=x
   return(df)}
+
+
+
+

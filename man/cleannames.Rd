@@ -12,4 +12,8 @@ cleannames(df)
 \description{
 This function imports a csv file into a data.table object
 }
+\examples{
+df <- data.frame("f f"=c(1,1), "G&G"=c(5,2))
+df_cleaned <- cleannames(df)
+}
 \keyword{dataManagement}

@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1622819985085.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2089414989",
+    "id" : "B13F17BC",
+    "lastKnownWriteTime" : 1622820066,
+    "last_content_update" : 1622820066898,
+    "path" : "C:/Users/jrg1035/GitProjects/JGTools/Update_and_share_JGTools.R",
+    "project_path" : "Update_and_share_JGTools.R",
+    "properties" : {
+        "cursorPosition" : "19,28",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

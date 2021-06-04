@@ -18,4 +18,7 @@ read.csv.dt(file, datadir = "./data/", sep = ",", header = TRUE)
 \description{
 This function imports a csv file into a data.table object
 }
+\examples{
+imported.data.table <- read.csv.dt("./csvs/test.csv")
+}
 \keyword{csv}
