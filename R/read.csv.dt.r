@@ -8,7 +8,7 @@
 #' @keywords csv
 #' @export
 #' @examples
-#' imported.data.table <- read.csv.dt("./csvs/test.csv")
+#' write.csv(file="test.csv", data.frame(a=1:2, b=c("one","two"))); imported.data.table <- read.csv.dt("test.csv", datadir= "")
 
 read.csv.dt<-function(file, datadir= "./data/", sep=",", header=TRUE){
   require(data.table)
@@ -22,4 +22,6 @@ read.csv.dt<-function(file, datadir= "./data/", sep=",", header=TRUE){
   return(tmp)
 }
 
+getwd()
 
+?requireNamespace

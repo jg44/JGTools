@@ -1,5 +1,5 @@
 Package: JGTools
-Title: Collection of random functions to make life easier
+Title: Collection of random functions to make R life easier
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Jeff",

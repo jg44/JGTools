@@ -8,10 +8,10 @@
 #' @keywords plot
 #' @export
 #' @examples
-#' axx()
-#' axx(X=FALSE) # Adds y-axis only.
+#' plot(1:5, 5:1); axx()
+#' plot(1:5, 5:1); axx(x=FALSE) # Adds y-axis only.
 
-axx<-function(x=T, y=T, box=T, cex.axis=1.3){
+axx<-function(x=TRUE, y=TRUE, box=T, cex.axis=1.3){
   if (x) axis(1, cex.axis=cex.axis)
   if (y) axis(2, las=2,cex.axis=cex.axis)
   if (box) box(bty="L", lwd=2.01)

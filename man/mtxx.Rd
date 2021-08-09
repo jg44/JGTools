@@ -21,7 +21,9 @@ mtxx(x, y, line1 = 3, line2 = 3, cex = 1.4)
 This function prepares the plotting area with a blank plot
 }
 \examples{
-mtxx(x = expression(bar(x) == sum(frac(x[i], n), i==1, alpha) ~ (non-sensical ~ axes ~ demo ~ only)),
-    y = expression(Log[10] ~ italic(Daphnia ~ pulex) ~ count ~ cm^-3), line1=4)
+mtxx(x = expression(bar(x) == sum(frac(x[i], n), i==1, alpha) ~
+    (non-sensical ~ axes ~ demo ~ only)),
+    y = expression(Log[10] ~ italic(Daphnia ~ pulex) ~ count ~ cm^-3),
+    line1=4)
 }
 \keyword{plot}

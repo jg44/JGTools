@@ -4,7 +4,7 @@
 \alias{axx}
 \title{Adds axis in preferred default style}
 \usage{
-axx(x = T, y = T, box = T, cex.axis = 1.3)
+axx(x = TRUE, y = TRUE, box = T, cex.axis = 1.3)
 }
 \arguments{
 \item{x}{Add the x-axis. Defaults to TRUE}
@@ -19,7 +19,7 @@ axx(x = T, y = T, box = T, cex.axis = 1.3)
 This function prepares the plotting area with a blank plot
 }
 \examples{
-axx()
-axx(X=FALSE) # Adds y-axis only.
+plot(1:5, 5:1); axx()
+plot(1:5, 5:1); axx(x=FALSE) # Adds y-axis only.
 }
 \keyword{plot}
