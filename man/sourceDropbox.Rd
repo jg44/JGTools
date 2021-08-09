@@ -13,7 +13,7 @@ sourceDropbox(dropbox.url)
 This function loads an .R file from a dropbox link
 }
 \examples{
-source(sourceDropbox("https://www.dropbox.com/s/gidwa8g23df6uw4/functionlistSample.r?dl=0"))
+source(sourceDropbox("https://www.dropbox.com/s/gidwa8g23df6uw4/functionlistSample.r?dl=0"), echo=TRUE)
 }
 \keyword{dropbox}
 \keyword{source}
