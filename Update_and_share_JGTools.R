@@ -13,6 +13,7 @@ setwd("C:/Users/jrg1035/GitProjects/JGTools/")
 
 document()
 
+
 #
 # devtools::install("JGTools", upgrade="always")
 #
