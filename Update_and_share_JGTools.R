@@ -5,7 +5,7 @@ library("devtools")
  #devtools::install_github("klutometis/roxygen", lib = Sys.getenv("R_LIBS_USER"))
  #devtools::install_github
 library(roxygen2)
-roxygen2::d
+# roxygen2::d
 
 
 # create_package("JGTools")

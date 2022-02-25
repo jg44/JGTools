@@ -7,23 +7,8 @@
 #' @examples
 #' source(sourceDropbox("https://www.dropbox.com/s/gidwa8g23df6uw4/functionlistSample.r?dl=0"))
 #' @export
-#' @examples
-#' source(sourceDropbox("https://www.dropbox.com/s/xgbv7suucwf57xq/functionlist.r?dl=0"))
 sourceDropbox <- function(dropbox.url) {
 
-
-  #' Adds axis in preferred default style
-  #'
-  #' This function prepares the plotting area with a blank plot
-  #' @param x Add the x-axis. Defaults to TRUE
-  #' @param y Add the y-axis. Defaults to TRUE
-  #' @param box Add axis lines. Defaults to TRUE
-  #' @param cex.axis Sets axis font size. Defaults to 1.3
-  #' @keywords plot
-  #' @export
-  #' @examples
-  #' plot(1:5, 5:1); axx()
-  #' plot(1:5, 5:1); axx(x=FALSE) # Adds y-axis only.
   # Purpose: source an R script from a Dropbox file
 
   # Input: the URL that you get when you share a Dropbox file
@@ -31,7 +16,7 @@ sourceDropbox <- function(dropbox.url) {
   # Output: the input to the source() function
 
   # Example of use:
-  # source.dropbox('https://www.dropbox.com/s/9m4139zbnee59jh/grfpairs.R'))
+  # source(sourceDropbox('https://www.dropbox.com/s/9m4139zbnee59jh/grfpairs.R'))
 
   # Author: George Fisher george@georgefisher.com
 
@@ -67,5 +52,3 @@ sourceDropbox <- function(dropbox.url) {
 
   paste0(tmpdr, "\\", destfile)
 }
-
-
