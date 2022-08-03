@@ -7,13 +7,14 @@ library("devtools")
 library(roxygen2)
 # roxygen2::d
 
+library("usethis")
 
 # create_package("JGTools")
 setwd("C:/Users/jrg1035/GitProjects/JGTools/")
 
 document()
-
-
+usethis::use_data(plantGrowth)
+devtools::
 #
 # devtools::install("JGTools", upgrade="always")
 #
@@ -21,7 +22,7 @@ document()
 # library(JGTools)
 # update_packages("JGTools")
 
-
+# browseURL("/Users/jrg1035/Dropbox/R/myfunctions/functionlist.r")
 # Share -------------------------------------------------------------------
 
 install.packages("devtools")
