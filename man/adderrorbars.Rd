@@ -32,16 +32,13 @@ agg.plantGrowth <- plantGrowth[, list(mean.drymass=mean(drymass), sd=sd(drymass)
     SE.drymass=sd(drymass)/sqrt(.N),
     plusminusCI95=abs(qt(.025, .N-1))*sd(drymass)/sqrt(.N) ),
     by=list(N, P)]
-
 # x11() #or quartz() (windows and mac, respectively)
 par(cex.axis=1.5, mar=c(6,6,1,1))
 agg.plantGrowth[, blankplot(1:length(mean.drymass)+c(-.2, .2),
                             seq(0, max(mean.drymass+SE.drymass), length.out=length(mean.drymass))  )]
-
 agg.plantGrowth[, adderrorbars(1:length(mean.drymass), y = mean.drymass, errorbar = SE.drymass)]
 agg.plantGrowth[, points(1:length(mean.drymass), mean.drymass, pch=19, col=4, cex=2)]
 agg.plantGrowth[, points(1:length(mean.drymass), mean.drymass, pch=19, col=1, cex=1.15)]
-
 axx(x=FALSE)
 agg.plantGrowth[, mtext(cex=1.4, at=1:length(mean.drymass), c(.1, 1, .1, 1), side=1, line=1, col="dark blue")]
 agg.plantGrowth[, mtext(cex=1.4, at=c(1.5, 3.5), c(.04, .4), side=1, line=2.5, col="dark red")]
@@ -49,12 +46,10 @@ mtext(at=0.05, side=1, line=1, col="dark blue", "Nitrogen:", adj=0, cex=1.4)
 mtext(at=0.05, side=1, line=2.5, col="dark red", "Phosphorus:", adj=0, cex=1.4)
 mtxx(expression(paste("Nutrient levels (g·L"^{-1}," of watering solution)")) ,
      expression("Aboveground dry mass (g)  " \%+-\% "SE"), line1=4.5)
-
 # Now plot with 95\% CI's
 par(cex.axis=1.5, mar=c(6,6,1,1))
 agg.plantGrowth[, blankplot(1:length(mean.drymass)+c(-.2, .2),
                             seq(0, max(mean.drymass+plusminusCI95), length.out=length(mean.drymass))  )]
-
 agg.plantGrowth[, adderrorbars(1:length(mean.drymass), y = mean.drymass, errorbar = plusminusCI95)]
 agg.plantGrowth[, points(1:length(mean.drymass), mean.drymass, pch=19, col=4)]
 axx(x=FALSE)
