@@ -33,8 +33,8 @@ detach("package:JGTools", unload = TRUE)
 install_github("jg44/JGTools", upgrade = TRUE, force=TRUE)
 library(JGTools)
 
-
+# cntl-shift-F10 to restart R
 ?adderrorbars
 example("adderrorbars")
-detach("package:stringr", unload = TRUE)
+
 

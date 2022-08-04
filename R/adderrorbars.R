@@ -13,6 +13,7 @@
 #' library(data.table)
 #' library(JGTools)
 #' data(plantGrowth)
+#' print("Make sure to click 'next' on the dev window that opens.")
 #' plantGrowth <- as.data.table(plantGrowth)
 #' # use data.table to aggregate data by treatment and calculate useful descriptive stats.
 #' agg.plantGrowth <- plantGrowth[, list(mean.drymass=mean(drymass), sd=sd(drymass), N=.N,
