@@ -19,7 +19,7 @@
 #'     SE.drymass=sd(drymass)/sqrt(.N),
 #'     plusminusCI95=abs(qt(.025, .N-1))*sd(drymass)/sqrt(.N) ),
 #'     by=list(N, P)]
-#' devWin(height=6, width=10, rows=1, cols=2)
+#' devWin(height=6, width=15, rows=1, cols=2)
 #' par(cex.axis=1.5, mar=c(6,6,1,1))
 #' agg.plantGrowth[, blankplot(1:length(mean.drymass)+c(-.2, .2),
 #'                             seq(0, max(mean.drymass+SE.drymass), length.out=length(mean.drymass))  )]
