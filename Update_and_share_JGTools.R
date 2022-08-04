@@ -7,6 +7,7 @@ library("devtools")
 library(roxygen2)
 # roxygen2::d
 
+
 library("usethis")
 
 # create_package("JGTools")
@@ -26,14 +27,25 @@ usethis::use_data(plantGrowth)
 
 #install.packages("devtools")
 library(devtools)
+detach("package:JGTools", unload = TRUE)
+
 install_github("jg44/JGTools", upgrade = TRUE)
 library(JGTools)
 
 ?adderrorbars
-X11()
+example("adderrorbars")
+detach("package:stringr", unload = TRUE)
+
+devWin <- function(height=8, width=9){
+  if (Sys.info()[1]=="Windows") x11(height=height, width=width) else
+    quartz(height=height, width=width)
+}
+devWin(8,15)
+par(mfrow=c(1,2))
 library(data.table)
 library(JGTools)
 data(plantGrowth)
+example("adderrorbars")
 plantGrowth <- as.data.table(plantGrowth)
 # use data.table to aggregate data by treatment and calculate useful descriptive stats.
 agg.plantGrowth <- plantGrowth[, list(mean.drymass=mean(drymass), sd=sd(drymass), N=.N,
@@ -42,8 +54,3 @@ agg.plantGrowth <- plantGrowth[, list(mean.drymass=mean(drymass), sd=sd(drymass)
                                by=list(N, P)]
 
 # x11() #or quartz() (windows and mac, respectively)
-par(cex.axis=1.5, mar=c(6,6,1,1))
-agg.plantGrowth[, blankplot(1:length(mean.drymass)+c(-.2, .2),
-                            seq(0, max(mean.drymass+SE.drymass), length.out=length(mean.drymass))  )]
-
-example(adderrorbars)

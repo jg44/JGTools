@@ -2,7 +2,7 @@
 % Please edit documentation in R/adderrorbars.R
 \name{adderrorbars}
 \alias{adderrorbars}
-\title{prepare plotting area with a blank plot}
+\title{Add error bars to a plot.}
 \usage{
 adderrorbars(x, y, errorbar, length = 0.07, col = 1, horiz = FALSE)
 }
@@ -32,7 +32,7 @@ agg.plantGrowth <- plantGrowth[, list(mean.drymass=mean(drymass), sd=sd(drymass)
     SE.drymass=sd(drymass)/sqrt(.N),
     plusminusCI95=abs(qt(.025, .N-1))*sd(drymass)/sqrt(.N) ),
     by=list(N, P)]
-# x11() #or quartz() (windows and mac, respectively)
+devWin(height=6, width=10, rows=1, cols=2)
 par(cex.axis=1.5, mar=c(6,6,1,1))
 agg.plantGrowth[, blankplot(1:length(mean.drymass)+c(-.2, .2),
                             seq(0, max(mean.drymass+SE.drymass), length.out=length(mean.drymass))  )]
