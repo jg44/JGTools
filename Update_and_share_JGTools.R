@@ -38,21 +38,3 @@ library(JGTools)
 example("adderrorbars")
 detach("package:stringr", unload = TRUE)
 
-devWin <- function(height=8, width=9){
-  if (Sys.info()[1]=="Windows") x11(height=height, width=width) else
-    quartz(height=height, width=width)
-}
-devWin(8,15)
-par(mfrow=c(1,2))
-library(data.table)
-library(JGTools)
-data(plantGrowth)
-example("adderrorbars")
-plantGrowth <- as.data.table(plantGrowth)
-# use data.table to aggregate data by treatment and calculate useful descriptive stats.
-agg.plantGrowth <- plantGrowth[, list(mean.drymass=mean(drymass), sd=sd(drymass), N=.N,
-                                      SE.drymass=sd(drymass)/sqrt(.N),
-                                      plusminusCI95=abs(qt(.025, .N-1))*sd(drymass)/sqrt(.N) ),
-                               by=list(N, P)]
-
-# x11() #or quartz() (windows and mac, respectively)
