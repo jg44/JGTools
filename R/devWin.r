@@ -9,7 +9,7 @@
 #' @keywords plot
 #' @export
 #' @examples
-#' devWin(6,10, 1, 2, oma=c(2,2,1,1))
+#' devWin(6,14, 1, 2, oma=c(2,2,1,1))
 #' plot(1,1, main="left plot")
 #' plot(1,1, main="right plot")
 #' mtext("both plots x", outer=TRUE, side=1, cex=1.8)
