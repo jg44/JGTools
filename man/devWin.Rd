@@ -21,7 +21,7 @@ devWin(height = 7, width = 7, rows = 1, cols = 1, oma = c(1, 1, 1, 1))
 This function prepares the plotting area with a blank plot
 }
 \examples{
-devWin(6,10, 1, 2, oma=c(2,2,1,1))
+devWin(6,14, 1, 2, oma=c(2,2,1,1))
 plot(1,1, main="left plot")
 plot(1,1, main="right plot")
 mtext("both plots x", outer=TRUE, side=1, cex=1.8)

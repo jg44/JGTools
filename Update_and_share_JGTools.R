@@ -27,10 +27,12 @@ usethis::use_data(plantGrowth)
 
 #install.packages("devtools")
 library(devtools)
+document()
 detach("package:JGTools", unload = TRUE)
 
 install_github("jg44/JGTools", upgrade = TRUE, force=TRUE)
 library(JGTools)
+
 
 ?adderrorbars
 example("adderrorbars")
