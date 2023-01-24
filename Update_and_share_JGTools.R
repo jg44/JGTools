@@ -26,10 +26,10 @@ usethis::use_data(plantGrowth)
 # Share -------------------------------------------------------------------
 
 #install.packages("devtools")
-library(devtools)
 document()
 detach("package:JGTools", unload = TRUE)
 
+library(devtools)
 install_github("jg44/JGTools", upgrade = TRUE, force=TRUE)
 library(JGTools)
 
