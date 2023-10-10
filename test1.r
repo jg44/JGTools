@@ -1162,13 +1162,13 @@ return(paste0(ff, ".metadata.txt"))
 }
 
 
-
 .openwd<-function(){browseURL(getwd())}
 
 .bu <- function(x=getwd()){
    require(rstudioapi)
    tmp <- gsub("[[:space:]]", "%20", x)
-   if (substring(x, (nchar(tmp)-1), nchar(tmp)) == ".r") rstudioapi::navigateToFile(eval(tmp)) else browseURL(eval(tmp))
+   isRext <- tolower(substring(tmp, (nchar(tmp)-1), nchar(tmp))) == ".r"
+   if (isRext) rstudioapi::navigateToFile(eval(tmp)) else browseURL(eval(tmp))
  }
 
 
