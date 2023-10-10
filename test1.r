@@ -1165,11 +1165,12 @@ return(paste0(ff, ".metadata.txt"))
 .openwd<-function(){browseURL(getwd())}
 
 .bu <- function(x=getwd()){
-   require(rstudioapi)
-   tmp <- gsub("[[:space:]]", "%20", x)
-   isRext <- tolower(substring(tmp, (nchar(tmp)-1), nchar(tmp))) == ".r"
-   if (isRext) rstudioapi::navigateToFile(eval(tmp)) else browseURL(eval(tmp))
- }
+  require(rstudioapi)
+  isRext <- tolower(substring(x, (nchar(x)-1), nchar(x))) == ".r"
+  if (!isRext) {
+    tmp <- gsub("[[:space:]]", "%20", x)
+    browseURL(eval(tmp)) } else rstudioapi::navigateToFile(eval(x))
+}
 
 
 .bmaster<-function(file, open=TRUE){  #assumes a global "master" df
