@@ -11,7 +11,7 @@ require(data.table)
   return(qP)
 }
 
-.clip <- function(x=1, Rtoclipboard=TRUE, header=FALSE){ 
+.clip <- function(x=1, Rtoclipboard=TRUE, header=FALSE){
   if (Rtoclipboard) {
     write.table (x, "clipboard-128", sep="\t")
     #print("Written to clipboard.")
@@ -28,7 +28,7 @@ require(data.table)
                       low = c(c(93,90,87), c(93,90,87)-10, c(93,90,87)-20, c(93,90)-30,0 ),
                       high = c(100, low[1:11]-.0001))
   lge$mark <- paste0(lge$mark, c("", "-", "+", "", "-","+", "", "-","+", "", "-" ))
-  
+
   for (i in 1:12){
     if (between(x, lge$low[i], lge$high[i])) return(lge$mark[i])
   }}
@@ -47,8 +47,8 @@ require(data.table)
   x <- gsub(".png", "", x)
   use=NULL
   lf <- list.files(path)
-  if (length(lf)>0){ 
-    tmpnames <- unlist(lapply(strsplit(list.files(path), "_"), "[[",1)) 
+  if (length(lf)>0){
+    tmpnames <- unlist(lapply(strsplit(list.files(path), "_"), "[[",1))
     use <- grep(x, tmpnames)
     }
   if (length(use)>0) {
@@ -58,7 +58,7 @@ require(data.table)
   }
   incname <- paste0(x, "_", sprintf(paste0("%0", digs, "d"), inc), ft)
   return(incname)
-  
+
 }
 
 help(Startup)
@@ -66,13 +66,13 @@ help(Startup)
 
 
 
-# .fileinc(x="BCI_logrankAbundance")  
+# .fileinc(x="BCI_logrankAbundance")
 
-.pngincrement <- function(x, path="./graphs/", ft='.png', digs=2, inc=1){ 
+.pngincrement <- function(x, path="./graphs/", ft='.png', digs=2, inc=1){
   if (!dir.exists(path)) dir.create(path)
   tmp <- paste0(path, .fileinc(x, path, ft, digs, inc))
   cat(paste0("![](",tmp,")\n"))
-  dev.print(png, file = tmp, width = 1024/1.6, height = 768/1.6) 
+  dev.print(png, file = tmp, width = 1024/1.6, height = 768/1.6)
 }
 .pnginc <- .pngincrement
 
@@ -88,14 +88,14 @@ help(Startup)
 
  # pdffile <- "C:/Users/jrg1035/Dropbox/R/Projects2019Win/Proj_SirexKatieFinalPush/R_SirexPaperKT2017/graphs/tunnel_length_by_position_and_larval_stage.pdf"
   .pdf2png <- function(pdffile){
-    
+
   if (!dir.exists("html")) dir.create("html")
     if (!dir.exists("html/images")) dir.create("html/images")
   pngfile <- gsub("graphs", "html/images", pdffile)
   pdffile <- gsub("/", "\\\\", pdffile)
   pngfile <- gsub("/", "\\\\", pngfile)
  #   pdffile <- gsub("\\\\", "\\")
-  
+
   pngfile <- gsub(".pdf", ".png", pngfile)
   x <- paste0('"C:\\Program Files\\ImageMagick-7.1.0-Q16-HDRI\\magick.exe" convert -density 300 "', pdffile, '" -resize 40% "', pngfile)
   system(x)
@@ -103,26 +103,26 @@ help(Startup)
   print(pngfile)
 }
 
-#   
+#
 # .pdf2png("C:/Users/jrg1035/Dropbox/R/Projects2019Win/Proj_SirexKatieFinalPush/R_SirexPaperKT2017/graphs/tunnel_length_by_position_and_larval_stage.pdf")
 
 .getCaption <- function(fileName, tag="Caption:"){
-  
+
   breakFun <- function(x){
-    #function to replace empty lines with newline. 
+    #function to replace empty lines with newline.
     if(nchar(x) == 0){
       return("\n\n") #double newline to give same space as in the .md-file
     } else {
       return(x)
     }
   }
-  
+
   storeLines <- readLines(fileName)
   # cat(paste0(lapply(storeLines, FUN=function(x) breakFun(x)), collapse=""))
   caption <- gsub(tag, "", storeLines[substring(storeLines, 1,nchar(tag))==tag])
   if (tag == "Caption:" & length(caption)==0) caption <- paste("No caption found in", fileName)
   if (tag != "Caption:" & length(caption)==0) caption <- "\n"
-  
+
   return(trimws(caption))
 }
 
@@ -134,22 +134,22 @@ help(Startup)
   for (i in 1:length(tmpfl)){ #i=5
     tmpflDate <- c(tmpflDate, file.mtime(paste0(dir, tmpfl[i])))
     #print(file.mtime(paste0(dir, tmpfl[i])))
-    
+
     capFile <- gsub(".png", ".pdf.metadata.md", gsub("html/images/", "", paste0(dir, tmpfl[i])))
     captions <- c(captions, .getCaption(fileName = capFile))
     notes <- c(notes, .getCaption(fileName = capFile, tag = "Notes:"))
-    
+
   }
-  
+
   fileList <- data.frame(filename=tmpfl, Last_Modified=as.POSIXct(tmpflDate, origin = "1970-01-01"), FigNum=0, captions, Notes=notes)
   fileList <- fileList[order(fileList$Last_Modified),]
-  
+
   if (is.null(whichpngs)) whichpngs <- 1:nrow(fileList)
   fileList[whichpngs,]$FigNum <- 1:length(whichpngs)
-  
+
   fileList_out <- fileList[whichpngs, ]
-  
-  
+
+
   return(fileList_out)
 }
 
@@ -168,18 +168,18 @@ help(Startup)
 # .addCaption(.listSorted(3))
 # .listSorted(c(2,0,0,1))
 # .listSorted()
-# 
+#
 # str(file.info(paste0(dir, "deliocourt_ln_beechnonbeechall.png")))
 
 
-# 
+#
 # .addCaption <- function(caption, file, dir=paste0(getwd(), "/html/images/"))){
 #     tmpfile <- paste0(dir, file)
 #     if file.exists(tmpfile) {
 #         captionFile <- gsub(".png", ".md", tmpfile )
 #     sink(, append = TRUE)
 #     }
-#     
+#
 
 
 
@@ -203,7 +203,7 @@ help(Startup)
   for (i in 1:nrow(tmpList)){
     cat(paste0("\n### Figure ", tmpList[i,]$FigNum, ". ", tmpList[i,]$captions, "\n<br />\n"))
     cat(paste0("\n\n![", tmpList[i,]$filename,"](./images/", tmpList[i,]$filename,")"))
-    cat(paste0("\n\n### Notes: ", tmpList[i,]$Notes), "\n------\n\n")    
+    cat(paste0("\n\n### Notes: ", tmpList[i,]$Notes), "\n------\n\n")
   }
   sink()
   browseURL(paste0("./html/", filename, ".Notes.md"))
@@ -211,8 +211,8 @@ help(Startup)
 }
 
 # .listSorted(c(3,5, 4, 1:2))
-# .makeMD(c(3,5, 4, 1:2), "BBD FIA, round 2", "BBD next round looking")  
-# 
+# .makeMD(c(3,5, 4, 1:2), "BBD FIA, round 2", "BBD next round looking")
+#
 
 
 
@@ -224,7 +224,7 @@ help(Startup)
 .ProjHist <- function(x, title = NULL, date=FALSE){
   sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
   if (date && !is.null(title)) cat(paste0("\n### ", title, ", ", format(Sys.time(), "%Y %M %d"))) else if (date)
-    cat(paste0("\n###", " ", format(Sys.time(), "%Y %M %d")))  
+    cat(paste0("\n###", " ", format(Sys.time(), "%Y %M %d")))
   cat(paste0("\n", x, "\n"))
   sink()
 }
@@ -243,12 +243,12 @@ help(Startup)
          CSSclass=NULL, append=TRUE)
   HTML(paste0("<h1>",paste0(basename, ".pdf"),"</h1>"), file=target)
   HTML(paste0("<h3>",paste0("file:///", graphs,basename, ".pdf"),"</h3>"), file=target)
-  HTMLInsertGraph(GraphFileName=paste0(graphs,basename, ".png"), 
+  HTMLInsertGraph(GraphFileName=paste0(graphs,basename, ".png"),
                   Caption=Caption, GraphBorder=1,
                   Align="center", WidthHTML=600, HeightHTML=NULL,
                   file=HTMLGetFile(), append=TRUE)
   metadat <- paste0(graphs,basename, ".pdf.metadata.txt")
-  if (file.exists(metadat)){ 
+  if (file.exists(metadat)){
     textadd <- readtext(metadat)
     txxt <- gsub("\n", "<br>", textadd$text)
     HTML(txxt)
@@ -263,12 +263,12 @@ help(Startup)
 .pointRaster <- function(x, y, pchIcons=NULL, whichones,  cexIcons=1, offset=.05){
   library(png)
   require(grid)
-  treeIcons <- list(  
+  treeIcons <- list(
     readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage0standing.png", TRUE),
     readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage1standing.png", TRUE),
-    readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage2standing.png", TRUE) , 
-    readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage3standing.png", TRUE) , 
-    
+    readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage2standing.png", TRUE) ,
+    readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage3standing.png", TRUE) ,
+
     readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage0felled1.png", TRUE),
     readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage1felled1.png", TRUE),
     readPNG("C:/Users/jrg1035/Dropbox/GrantsAndFunding/2019/EM_SPB_2019Maybe/TreeIcons/stage2felled1.png", TRUE),
@@ -279,7 +279,7 @@ help(Startup)
   for (i in 1:length(x)){
     rasterImage(pchIcons[[whichones[i]]], x[i]-os, y[i]-os, x[i]+os, y[i]+os)
   }
-} 
+}
 
 
 
@@ -488,10 +488,10 @@ require(data.table)
 
 .assign_with_metadata <- function(x, value, ..., pos = parent.frame(), inherits = FALSE)
 {
-  # x (MUST be in quotes) is the name of the variable to be saved as important 
+  # x (MUST be in quotes) is the name of the variable to be saved as important
   # value is the variable or file that serves as the source
   # pos is the environment
-  
+
   attr(value, "creator") <- get_user()
   attr(value, "time_created") <- Sys.time()
   more_attr <- list(...)
@@ -543,10 +543,10 @@ require(data.table)
           x <- unlist(strsplit(x, "\n[ \t\n]*\n"))
           ## Join the rest
           x <- paste(x, collapse = "\n\n")
-     
+
           writeLines(strwrap(x, width = 80, exdent = 5,prefix = "imptvars   "))
-          
-          
+
+
         } else return(impattr) } else
                     return(impVar)
 }
@@ -555,7 +555,7 @@ require(data.table)
 #.imptVars(T)
 
  # sapply(ls(), FUN=function(x) attributes(eval(parse(text=x))))
-.libraryInstallorLoad("rstudioapi")    
+.libraryInstallorLoad("rstudioapi")
 rstudioapi::getActiveDocumentContext()$path
 
 dirname(sys.frame(1)$ofile)
@@ -600,7 +600,7 @@ dirname(sys.frame(1)$ofile)
 .readImportant <- function(datadir="./data/", overwrite=FALSE) {
   lf <- list.files(datadir, pattern=".rds")
   fn <- gsub(".rds", "", lf)
-  for (i in 1:length(lf)){ 
+  for (i in 1:length(lf)){
     print(i)
     Sys.sleep(.1)
     if (!exists(fn[i])) assign(fn[i], readRDS(paste0(datadir, lf)[i]), envir = .GlobalEnv) else if (overwrite) assign(fn[i], readRDS(paste0(datadir, lf)[i]),envir = .GlobalEnv)
@@ -609,11 +609,11 @@ dirname(sys.frame(1)$ofile)
 }
 
 
-  
 
 
-  
-  
+
+
+
 .groups <- function(groups=3, N, letterslength=26, countchars=2) {
     reps<-trunc(N/groups) + N %% groups
     df<-data.frame(LETTERS[1:letterslength], LETTERS[1:letterslength])
@@ -777,7 +777,7 @@ print(pathtofile)
   ff<-gsub('//', '/', ff)  ## interior spaces
   ff<-gsub('.pdf.pdf', '.pdf', ff)
   if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
-    if (!overwrite) { 
+    if (!overwrite) {
       print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
       #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
       #dev.copy2pdf(file=ff)}
@@ -822,7 +822,7 @@ print(pathtofile)
   ff<-gsub('//', '/', ff)  ## interior spaces
   ff<-gsub('.pdf.pdf', '.pdf', ff)
   if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
-    if (!overwrite) { 
+    if (!overwrite) {
       print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
       #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
       #dev.copy2pdf(file=ff)}
@@ -837,7 +837,7 @@ print(pathtofile)
     cat("\n### Script file: ")
     cat(paste0("\n", tf))
     cat("\n")
-    
+
     if (NotesInput) {
       cat("Approximate line: ", readline("Approx. line? "))
       cat("\nNotes: ", readline("Notes? "))
@@ -856,17 +856,17 @@ print(pathtofile)
     cat("\n------\n")
     .sinkall()
   }
-  if (history) {   
+  if (history) {
     sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
     cat(paste0("\n### Script file: ", tf))
     cat("\n")
     cat("\nTimestamp: ", date(), "\n")
-    
+
     cat("\n###", .clean(file))
     cat(paste0("\nCaption: ", caption,'\n'))
     cat("\n![", .clean(file), "](./html/images/",.clean(file), ".png)", sep="")
     cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
-    
+
     # cat("\n## ", .clean(file))
     # cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
     # cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
@@ -878,20 +878,20 @@ print(pathtofile)
     cat("\n------\n")
     .sinkall()
   }
-  
+
   #make Powerpoint
-  if (powerpoint) {   
+  if (powerpoint) {
     if (is.null(caption)) caption <- .clean(file)
     if (is.null(slidetitle)) slidetitle <- .clean(file)
     sink(paste0(getwd(), "/powerpoint.md"), append = TRUE)
     #cat(paste0("\n### Script file: ", tf))
     cat("\n\n# ", slidetitle, sep="")
-    cat("\n![", caption, "](./html/images/",.clean(file), ".png)", sep="")    
+    cat("\n![", caption, "](./html/images/",.clean(file), ".png)", sep="")
     cat("\n")
     .sinkall()
   }
-  
-  
+
+
   print(ff)
   Sys.sleep(1.3)
   print(paste0(gsub("graphs/", "", ff), ".metadata.md"))
@@ -900,7 +900,7 @@ print(pathtofile)
 }
 
 
-.devpdf.2020.06.07 <- function(file, wd="./graphs", open=FALSE, overwrite=FALSE, 
+.devpdf.2020.06.07 <- function(file, wd="./graphs", open=FALSE, overwrite=FALSE,
                     png=FALSE, tf=NULL, meta=TRUE, Notes=FALSE, history=TRUE){
   require("rstudioapi")
   tf <- rstudioapi::getActiveDocumentContext()$path
@@ -911,7 +911,7 @@ print(pathtofile)
   ff<-gsub('//', '/', ff)  ## interior spaces
   ff<-gsub('.pdf.pdf', '.pdf', ff)
   if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
-    if (!overwrite) { 
+    if (!overwrite) {
       print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
       #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
       #dev.copy2pdf(file=ff)}
@@ -926,7 +926,7 @@ print(pathtofile)
     cat("Script file:  ")
     cat(paste0("\n", tf))
     cat("\n")
-    
+
     if (Notes) {
       cat("Approximate line: ", readline("Approx. line? "))
       cat("\nNotes: ", readline("Notes? "))
@@ -943,7 +943,7 @@ print(pathtofile)
     cat("\n------")
     .sinkall()
   }
-  if (history) {   
+  if (history) {
     sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
     cat(paste0("\nScript file: ", tf))
     cat("\n")
@@ -1063,24 +1063,24 @@ return(paste0(ff, ".metadata.txt"))
     if (marg) {par(mar=c(6,7.5,1,1))}
     plot(..., xlab="", ylab="", axes=F, type="n")
  }
- 
+
  .barplot<-function(x, marg=TRUE, ...) {
    if (marg) {par(mar=c(8,8.5,1,1))}
   bp <- barplot(x, ..., xlab="", ylab="", axes=F, beside=TRUE)
    .axx(x=FALSE)
    return(bp)
  }
- 
+
 
  .plot(1,1)
 
- .addse<-function(x, y, se, length=.07, col=1, horiz=FALSE){ 
+ .addse<-function(x, y, se, length=.07, col=1, horiz=FALSE){
    if (horiz) {arrows(x-se, y, x+se, y, code=3, angle=90, length=length, col=col)} else {
          arrows(x, y-se, x, y+se, code=3, angle=90, length=length, col=col)
      }
    }
 
- 
+
  .plusmin<-function(x,rnd=1) {paste(round(x[,2],rnd), round(x[,3],rnd), sep=" ± ")}
 
 
@@ -1163,11 +1163,14 @@ return(paste0(ff, ".metadata.txt"))
 
 
 
-
-
 .openwd<-function(){browseURL(getwd())}
 
-.bu<-function(x=getwd()){ browseURL(eval(gsub("[[:space:]]", "%20", x))) }
+.bu <- function(x=getwd()){
+   require(rstudioapi)
+   tmp <- gsub("[[:space:]]", "%20", x)
+   if (substring(x, (nchar(tmp)-1), nchar(tmp)) == ".r") rstudioapi::navigateToFile(eval(tmp)) else browseURL(eval(tmp))
+ }
+
 
 .bmaster<-function(file, open=TRUE){  #assumes a global "master" df
    str<-paste(getwd(), master[file,1], sep="/")
@@ -1666,7 +1669,7 @@ return(mergetable)
   x = NULL, # mid x coordinate for image
   y = NULL, # mid y coordinate for image
   width = NULL, # width of image (in x coordinate units)
-  interpolate = TRUE # (passed to graphics::rasterImage) A logical vector (or scalar) indicating whether to apply linear interpolation to the image when drawing. 
+  interpolate = TRUE # (passed to graphics::rasterImage) A logical vector (or scalar) indicating whether to apply linear interpolation to the image when drawing.
 ){
   if(is.null(x) | is.null(y) | is.null(width)){stop("Must provide args 'x', 'y', and 'width'")}
   USR <- par()$usr # A vector of the form c(x1, x2, y1, y2) giving the extremes of the user coordinates of the plotting region
@@ -1676,9 +1679,9 @@ return(mergetable)
   WIDi <- width/(USR[2]-USR[1])*PIN[1] # convert width units to inches
   HEIi <- WIDi * ARp # height in inches
   HEIu <- HEIi/PIN[2]*(USR[4]-USR[3]) # height in units
-  rasterImage(image = obj, 
+  rasterImage(image = obj,
               xleft = x-(width/2), xright = x+(width/2),
-              ybottom = y-(HEIu/2), ytop = y+(HEIu/2), 
+              ybottom = y-(HEIu/2), ytop = y+(HEIu/2),
               interpolate = interpolate)
 }
 
