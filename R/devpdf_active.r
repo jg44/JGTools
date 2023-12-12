@@ -1,3 +1,5 @@
+# source("https://github.com/jg44/JGTools/blob/master/R/devpdf_active.r")
+
 .devpdf <- function(file, pdfPath="graphs", openfile=FALSE, overwrite=FALSE, caption=NULL, powerpoint=TRUE, slidetitle=NULL,
                     png=TRUE, tf=NULL, meta=TRUE, NotesInput=FALSE, Notes="", history=TRUE, annotationsPath="./html/",
                     pathtoMDeditor="C:/Users/jrg1035/AppData/Local/Markdown Monster/MarkdownMonster.exe"){
@@ -69,7 +71,7 @@
     # paste0(formatC(mxCur+1, width = 2, format = "d", flag = "0"), "_", ff, ".annot.md")
 
 
-    sink(paste0(annotationsPath, annotFilename, ".annot.md"))
+    sink(paste0(annotationsPath, annotFilename))
     if (NotesInput) {
       cat("Approximate line: ", readline("Approx. line? "))
       cat("\nNotes: ", readline("Notes? "))
