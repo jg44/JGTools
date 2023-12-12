@@ -1,3 +1,3 @@
 # README.MD 
 
-![ff](.\images\test.png)
+![Kiku](images/test.png)
