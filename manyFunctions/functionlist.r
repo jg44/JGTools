@@ -1,5 +1,7 @@
 # updated 2022.12.30
 
+
+
 require(JGTools)
 require(data.table)
 
@@ -10,6 +12,107 @@ R.version
         quartz(height=height, width=width)
     par(mar=mar)
 }
+
+# .devpdf function --------------------------------------------------------
+
+# .devpdf <- function(file, pdfPath="./graphs", openfile=FALSE, overwrite=FALSE, caption=NULL, powerpoint=TRUE, slidetitle=NULL,
+#                     png=TRUE, tf=NULL, meta=TRUE, NotesInput=FALSE, Notes="", history=TRUE,
+#                     pathtoMDeditor="C:/Users/jrg1035/AppData/Local/Markdown Monster/MarkdownMonster.exe"){
+#   require("rstudioapi")
+#   tf <- rstudioapi::getActiveDocumentContext()$path
+#   projName <- strsplit(rstudioapi::getActiveProject(),"/")[[1]][length(strsplit(rstudioapi::getActiveProject(),"/")[[1]])]
+#   projNamePath <- paste0("./",substring(tf, nchar(rstudioapi::getActiveProject())-nchar(projName)+1, nchar(tf)))
+#
+#   grep("/", rstudioapi::getActiveProject())
+#   if (!(dir.exists(pdfPath))) dir.create(pdfPath)
+#   if (is.null(pdfPath)) pdfPath=getwd()
+#   #if ((meta) && (is.null(tf))) tf<-.getfile()
+#   file <- .clean(file)
+#   ff<-paste(file,".pdf",sep="")
+#   ff<-gsub('//', '/', ff)  ## interior spaces
+#   ff<-gsub('.pdf.pdf', '.pdf', ff)
+#   if (!any(list.dirs()=="./notesGraphAnnot")) dir.create("./notesGraphAnnot") #else print("")
+#   #overwrite <- FALSE
+#   annotationsPath <- "./html/"
+#   if ((overwrite) || (!(file.exists(paste0(pdfPath, "/", ff))))) dev.copy2pdf(file=paste0(pdfPath, "/",ff)) else
+#     if (!overwrite) {
+#       print("File already exists. Opening existing file. Or choose overwrite=TRUE")
+#       #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
+#       #dev.copy2pdf(file=ff)}
+#       browseURL(paste0(pdfPath, "/", ff))
+#     }
+#   if (openfile) browseURL(paste0(pdfPath, "/", ff))
+#   if (png) {
+#     #ff <- "test7.pdf"
+#     pngfile <- .pdf2png(paste0(pdfPath, "/", ff))
+#   }
+#   if ((meta) && (tf!="n")) {
+#     sink(paste0(annotationsPath, ff, ".annot.md"))
+#     cat("\n### Script file: ")
+#     cat(paste0("\n", projNamePath))
+#     cat("\n")
+#
+#     if (NotesInput) {
+#       cat("Approximate line: ", readline("Approx. line? "))
+#       cat("\nNotes: ", readline("Notes? "))
+#       cat("\nFigure #: ", readline("Figure #: "))
+#     }
+#
+#     bbname <- paste0("images/",strsplit(pngfile, "\\\\")[[1]][length(strsplit(pngfile, "\\\\")[[1]])])
+#     cat("\nTimestamp: ", date(), "\n")
+#     cat("\n### ", .clean(file))
+#     cat(paste0("\nCaption: ", caption,'\n'))
+#     cat("\n![", bbname, "](", bbname,")", sep="")
+#     cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
+#     #cat("\n\n[", .clean(file), "_png]:", sep="")
+#     #cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     #cat("\n\n[", .clean(file), "]:", sep="")
+#     #cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat(paste0("\n", "Notes: ", Notes))
+#     cat("\n------\n")
+#     .sinkall()
+#     browseURL(paste0(annotationsPath, ff, ".annot.md"))
+#   }
+#   if (history) {
+#     sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
+#     cat(paste0("\n### Script file: ", tf))
+#     cat("\n")
+#     cat("\nTimestamp: ", date(), "\n")
+#
+#     cat("\n###", .clean(file))
+#     cat(paste0("\nCaption: ", caption,'\n'))
+#     cat("\n![", .clean(file), "](/images/",.clean(file), ".png)", sep="")
+#     cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
+#
+#     # cat("\n## ", .clean(file))
+#     # cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
+#     # cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     # cat("\n\n[", .clean(file), "_png]:", sep="")
+#     # cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     # cat("\n\n[", .clean(file), "]:", sep="")
+#     # cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat(paste0("\n", "Notes: ", Notes))
+#     cat("\n------\n")
+#     .sinkall()
+#   }
+#
+#   #make Powerpoint
+#   if (powerpoint) {
+#     if (is.null(caption)) caption <- .clean(file)
+#     if (is.null(slidetitle)) slidetitle <- .clean(file)
+#     sink(paste0(getwd(), "/powerpoint.md"), append = TRUE)
+#     #cat(paste0("\n### Script file: ", tf))
+#     cat("\n\n# ", slidetitle, sep="")
+#     cat("\n![", caption, "](/images/",.clean(file), ".png)", sep="")
+#     cat("\n")
+#     .sinkall()
+#   }
+# }
+
+x11();plot(1,4)
+.devpdf("delete1")
+
+# .gitbash function -------------------------------------------------------
 
 .gitbash <- function(wd=getwd(), gitpath="C:/Program Files/Git/git-bash.exe"){
     wd <- list.dirs()[grep('.git+$', list.dirs())]
@@ -207,15 +310,13 @@ getwd()
 # (!dir.exists("html/images"))
 
 
- # pdffile <- "C:/Users/jrg1035/Dropbox/R/Projects2019Win/Proj_SirexKatieFinalPush/R_SirexPaperKT2017/graphs/tunnel_length_by_position_and_larval_stage.pdf"
- .pdf2png <- function(pdffile){
+.pdf2png <- function(pdffile){
 
   if (!dir.exists("html")) dir.create("html")
     if (!dir.exists("html/images")) dir.create("html/images")
   pngfile <- gsub("graphs", "html/images", pdffile)
   pdffile <- gsub("/", "\\\\", pdffile)
   pngfile <- gsub("/", "\\\\", pngfile)
- #   pdffile <- gsub("\\\\", "\\")
 
   pngfile <- gsub(".pdf", ".png", pngfile)
   x <- paste0('"C:\\Program Files\\ImageMagick-7.1.0-Q16-HDRI\\magick.exe" convert -density 300 "', pdffile, '" -resize 40% "', pngfile)
@@ -766,6 +867,7 @@ rstudioapi::getActiveDocumentContext()$path
     sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
 }
 
+x <- "The Response Patterns of Arbuscular Mycorrhizal and Ectomycorrhizal Symbionts Under Elevated CO2: A Meta-Analysis"
 
 # x=sitedeets$site1 caps=c(14)
 .title<-function(x, caps=NULL, allcaps=NULL){
@@ -972,100 +1074,6 @@ print(pathtofile)
 # .graphwindow(5,17)
 # .ggsave("tilf.png")
 
-.devpdf <- function(file, pdfPath="./graphs", openfile=FALSE, overwrite=FALSE, caption=NULL, powerpoint=TRUE, slidetitle=NULL,
-                    png=TRUE, tf=NULL, meta=TRUE, NotesInput=FALSE, Notes="", history=TRUE){
-    require("rstudioapi")
-    tf <- rstudioapi::getActiveDocumentContext()$path
-    if (is.null(pdfPath)) pdfPath=getwd()
-    #if ((meta) && (is.null(tf))) tf<-.getfile()
-    file <- .clean(file)
-    ff<-paste(file,".pdf",sep="")
-    ff<-gsub('//', '/', ff)  ## interior spaces
-    ff<-gsub('.pdf.pdf', '.pdf', ff)
-    if (!any(list.dirs()=="./notesGraphAnnot")) dir.create("./notesGraphAnnot") #else print("")
-    #overwrite <- FALSE
-    annotationsPath <- "./html/"
-    if ((overwrite) || (!(file.exists(paste0(pdfPath, "/", ff))))) dev.copy2pdf(file=paste0(pdfPath, "/",ff)) else
-        if (!overwrite) {
-            print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
-            #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
-            #dev.copy2pdf(file=ff)}
-            browseURL(paste0(pdfPath, "/", ff))
-        }
-    if (openfile) browseURL(paste0(pdfPath, "/", ff))
-    if (png) {
-        #ff <- "test7.pdf"
-        pngfile <- .pdf2png(paste0(pdfPath, "/", ff))
-    }
-    if ((meta) && (tf!="n")) {
-        sink(paste0(annotationsPath, ff, ".annot.md"))
-        cat("\n### Script file: ")
-        cat(paste0("\n", tf))
-        cat("\n")
-
-        if (NotesInput) {
-            cat("Approximate line: ", readline("Approx. line? "))
-            cat("\nNotes: ", readline("Notes? "))
-            cat("\nFigure #: ", readline("Figure #: "))
-        }
-
-        bbname <- paste0("images/",strsplit(pngfile, "\\\\")[[1]][length(strsplit(pp, "\\\\")[[1]])])
-        cat("\nTimestamp: ", date(), "\n")
-        cat("\n### ", .clean(file))
-        cat(paste0("\nCaption: ", caption,'\n'))
-        cat("\n![", bbname, "](", bbname,")", sep="")
-        cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
-        #cat("\n\n[", .clean(file), "_png]:", sep="")
-        #cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-        #cat("\n\n[", .clean(file), "]:", sep="")
-        #cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-        cat(paste0("\n", "Notes: ", Notes))
-        cat("\n------\n")
-        .sinkall()
-        browseURL(paste0(annotationsPath, ff, ".annot.md"))
-    }
-    if (history) {
-        sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
-        cat(paste0("\n### Script file: ", tf))
-        cat("\n")
-        cat("\nTimestamp: ", date(), "\n")
-
-        cat("\n###", .clean(file))
-        cat(paste0("\nCaption: ", caption,'\n'))
-        cat("\n![", .clean(file), "](/images/",.clean(file), ".png)", sep="")
-        cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
-
-        # cat("\n## ", .clean(file))
-        # cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
-        # cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-        # cat("\n\n[", .clean(file), "_png]:", sep="")
-        # cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-        # cat("\n\n[", .clean(file), "]:", sep="")
-        # cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-        cat(paste0("\n", "Notes: ", Notes))
-        cat("\n------\n")
-        .sinkall()
-    }
-
-    #make Powerpoint
-    if (powerpoint) {
-        if (is.null(caption)) caption <- .clean(file)
-        if (is.null(slidetitle)) slidetitle <- .clean(file)
-        sink(paste0(getwd(), "/powerpoint.md"), append = TRUE)
-        #cat(paste0("\n### Script file: ", tf))
-        cat("\n\n# ", slidetitle, sep="")
-        cat("\n![", caption, "](/images/",.clean(file), ".png)", sep="")
-        cat("\n")
-        .sinkall()
-    }
-
-
-    print(ff)
-    Sys.sleep(1.3)
-    print(paste0(gsub("graphs/", "", ff), "annot.md"))
-    # browseURL(paste0(gsub("graphs/", "", ff), ".metadata.md"), browser = "C:/Program Files/Mozilla Firefox/firefox.exe")
-    if (openfile) browseURL(paste0(gsub("graphs/", "", ff), ".metadata.md"), browser = "C:/Users/jrg1035/AppData/Local/Markdown Monster/MarkdownMonster.exe")
-}
 
 
 .devpdf_2022.12.11 <- function(file, wd="./graphs", open=FALSE, overwrite=FALSE, caption=NULL, powerpoint=TRUE, slidetitle=NULL,
@@ -1362,11 +1370,25 @@ sinklist <- "./html/basic structure of data collection.md"
 
 
 
- .addse<-function(x, y, se, length=.07, col=1, horiz=FALSE){
-   if (horiz) {arrows(x-se, y, x+se, y, code=3, angle=90, length=length, col=col)} else {
-         arrows(x, y-se, x, y+se, code=3, angle=90, length=length, col=col)
-     }
-   }
+# .addse function ---------------------------------------------------------
+
+ .addse<-function(x, y, se, length=.07, col=1, horiz=FALSE, upperonly=FALSE){
+
+   if (horiz) {minbar <- x-se; maxbar <- x+se; loc <- y} else {minbar <- y-se; maxbar <- y+se; loc <- x}
+   if (upperonly) minbar <- minbar+se
+
+   arrows(loc, minbar, loc, maxbar, code=3, angle=90, length=length, col=col)
+ }
+
+  #
+   # if (horiz) {arrows(x-se, y, x+se, y, code=3, angle=90, length=length, col=col)} else {
+   #   arrows(x, y-se, x, y+se, code=3, angle=90, length=length, col=col)
+   # }
+   # if (upperonly)  { arrows(x, y-0, x, y+se, code=2, angle=90, length=length, col=col)
+   # }
+ # }
+
+
 
 
  .plusmin<-function(x,rnd=1) {paste(round(x[,2],rnd), round(x[,3],rnd), sep=" ± ")}
@@ -1451,11 +1473,13 @@ sinklist <- "./html/basic structure of data collection.md"
 
 
 
-
-
 .openwd<-function(){browseURL(getwd())}
 
-.bu<-function(x=getwd()){ browseURL(eval(gsub("[[:space:]]", "%20", x))) }
+.bu<-function(x=getwd()){
+  require(rstudioapi)
+    tmp <- gsub("[[:space:]]", "%20", x)
+    if (substring(x, (nchar(tmp)-1), nchar(tmp)) == ".r") rstudioapi::navigateToFile(eval(tmp)) else browseURL(eval(tmp))
+    }
 
 .bmaster<-function(file, open=TRUE){  #assumes a global "master" df
    str<-paste(getwd(), master[file,1], sep="/")
@@ -1544,10 +1568,10 @@ while (sink.number()>0) sink()
 file.show("outfile.txt")
    }
 
-.polygon<-function(xleft, xright, bottom, top, col="gray70", border=1){
+.polygon<-function(xleft, xright, bottom, top, col="gray70", border=1, lwd=1){
    x1<-c(xleft, xright, xright, xleft, xleft)
    y1<-c(rep(bottom,2), rep(top, 2), bottom)
-   polygon(x1,y1, col=col, border=border)
+   polygon(x1,y1, col=col, border=border, lwd=lwd)
 }
 
 .png<-function(file, wd=NULL, open=TRUE, overwrite=TRUE){
@@ -1911,6 +1935,8 @@ return(mergetable)
    x <-  gsub('\\.', '_', x)  ## interior spaces
    x <-  gsub('__', '_', x)  ## interior spaces
    x <-  gsub('&+', 'and', x)
+   x <-  gsub('_+$', '', x)  ## trailing spaces only
+   x <-  gsub('\\.\\.', '\\.', x)  ## interior spaces
    names(df)=x
   return(df)}
 
@@ -1969,6 +1995,3 @@ return(mergetable)
               ybottom = y-(HEIu/2), ytop = y+(HEIu/2),
               interpolate = interpolate)
 }
-
-
-

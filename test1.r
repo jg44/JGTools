@@ -1067,19 +1067,25 @@ return(paste0(ff, ".metadata.txt"))
  .barplot<-function(x, marg=TRUE, ...) {
    if (marg) {par(mar=c(8,8.5,1,1))}
   bp <- barplot(x, ..., xlab="", ylab="", axes=F, beside=TRUE)
-   .axx(x=FALSE)
+   .axx(x=FALSE)# .bu("/Users/jrg1035/GitProjects/JGTools/manyFunctions/functionlist.r")
+
    return(bp)
  }
 
-
+.bu("/Users/jrg1035/GitProjects/JGTools/manyFunctions/functionlist.r")
  .plot(1,1)
 
- .addse<-function(x, y, se, length=.07, col=1, horiz=FALSE){
+ .addse<-function(x, y, se, length=.07, col=1, horiz=FALSE, upperonly=TRUE){
    if (horiz) {arrows(x-se, y, x+se, y, code=3, angle=90, length=length, col=col)} else {
          arrows(x, y-se, x, y+se, code=3, angle=90, length=length, col=col)
-     }
    }
+   if (upperonly)  { arrows(x, y-0, x, y+se, code=2, angle=90, length=length, col=col)
+   }
+ }
 
+
+
+ .addse(x=bp, y=mplot[[i]], se=seplot[[i]], upperonly = TRUE)
 
  .plusmin<-function(x,rnd=1) {paste(round(x[,2],rnd), round(x[,3],rnd), sep=" ± ")}
 
