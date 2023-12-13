@@ -6,6 +6,7 @@ require(JGTools)
 require(data.table)
 
 R.version
+#.gitbash()
 
 .graphwindow <- function(height=6, width=6, mar=c(6,6,1,1), xpos=500, ypos=150){
     if (.Platform$OS.type == "windows") x11(height=height, width=width, xpos=xpos, ypos=ypos) else
@@ -109,8 +110,7 @@ R.version
 #   }
 # }
 
-x11();plot(1,4)
-.devpdf("delete1")
+
 
 # .gitbash function -------------------------------------------------------
 
@@ -1018,57 +1018,57 @@ print(pathtofile)
 
 
 
-.devpdfoldJune2020 <- function(file, wd="./graphs", open=TRUE, overwrite=FALSE, png=FALSE, tf=NULL, meta=FALSE){
-  require("rstudioapi")
-  tf <- rstudioapi::getActiveDocumentContext()$path
-  if (is.null(wd)) wd=getwd()
-  if ((meta) && (is.null(tf))) tf<-.getfile()
-  file <- .clean(file)
-  ff<-paste(wd,"/",file,".pdf",sep="")
-  ff<-gsub('//', '/', ff)  ## interior spaces
-  ff<-gsub('.pdf.pdf', '.pdf', ff)
-  if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
-    if (!overwrite) {
-      print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
-      #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
-      #dev.copy2pdf(file=ff)}
-      browseURL(ff)
-    }
-  if (open) browseURL(ff)
-  if (png) {
-    .pdf2png(ff)
-    # system(paste("mkdir '",wd, "/png_version/'", sep=""))
-    # ff <- gsub("/", "\\\\", ff)
-    # fng <- gsub(".pdf", ".png", ff)
-    # fn<-strsplit(ff, "/")[[1]][length(strsplit(ff, "/")[[1]])]
-    # #pngpath<-paste(wd, "/png_version/", sep="")
-    # #x<-paste("sips -s format png '", ff, "' --out '", pngpath, substring(fn, 1, nchar(fn)-4), ".png'", sep="")
-    # x <- paste0('"C:/Program Files/ImageMagick-7.0.8-Q16/magick.exe" convert -density 288 "', ff, '" -resize 25% "', fng)
-    # system(x)
-  }
-  if ((meta) && (tf!="n") && (overwrite)) {
-    sink(paste0(ff, ".metadata.txt"))
-    cat("Script file:  ")
-    cat(paste0("\n", tf))
-    cat("\n")
-    cat("Approximate line: ", readline("Approx. line? "))
-    cat("\nNotes: ", readline("Notes? "))
-    cat("\nFigure #: ", readline("Figure #: "))
-    cat("\nTimestamp: ", date())
-    .sinkall()
-  }
-  print(ff)
-}
-
-#.graphwindow(5,16)
-
-.ggsave <- function(file, dpi=500){
-    require("rstudioapi")
-    require("ggplot2")
-    tf <- rstudioapi::getActiveDocumentContext()$path
-    ggsave(file, dpi=dpi, width=dev.size()[1], height = dev.size()[2],
-           path=paste0(getwd(),"/html/images/"))
-}
+# .devpdfoldJune2020 <- function(file, wd="./graphs", open=TRUE, overwrite=FALSE, png=FALSE, tf=NULL, meta=FALSE){
+#   require("rstudioapi")
+#   tf <- rstudioapi::getActiveDocumentContext()$path
+#   if (is.null(wd)) wd=getwd()
+#   if ((meta) && (is.null(tf))) tf<-.getfile()
+#   file <- .clean(file)
+#   ff<-paste(wd,"/",file,".pdf",sep="")
+#   ff<-gsub('//', '/', ff)  ## interior spaces
+#   ff<-gsub('.pdf.pdf', '.pdf', ff)
+#   if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
+#     if (!overwrite) {
+#       print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
+#       #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
+#       #dev.copy2pdf(file=ff)}
+#       browseURL(ff)
+#     }
+#   if (open) browseURL(ff)
+#   if (png) {
+#     .pdf2png(ff)
+#     # system(paste("mkdir '",wd, "/png_version/'", sep=""))
+#     # ff <- gsub("/", "\\\\", ff)
+#     # fng <- gsub(".pdf", ".png", ff)
+#     # fn<-strsplit(ff, "/")[[1]][length(strsplit(ff, "/")[[1]])]
+#     # #pngpath<-paste(wd, "/png_version/", sep="")
+#     # #x<-paste("sips -s format png '", ff, "' --out '", pngpath, substring(fn, 1, nchar(fn)-4), ".png'", sep="")
+#     # x <- paste0('"C:/Program Files/ImageMagick-7.0.8-Q16/magick.exe" convert -density 288 "', ff, '" -resize 25% "', fng)
+#     # system(x)
+#   }
+#   if ((meta) && (tf!="n") && (overwrite)) {
+#     sink(paste0(ff, ".metadata.txt"))
+#     cat("Script file:  ")
+#     cat(paste0("\n", tf))
+#     cat("\n")
+#     cat("Approximate line: ", readline("Approx. line? "))
+#     cat("\nNotes: ", readline("Notes? "))
+#     cat("\nFigure #: ", readline("Figure #: "))
+#     cat("\nTimestamp: ", date())
+#     .sinkall()
+#   }
+#   print(ff)
+# }
+#
+# #.graphwindow(5,16)
+#
+# .ggsave <- function(file, dpi=500){
+#     require("rstudioapi")
+#     require("ggplot2")
+#     tf <- rstudioapi::getActiveDocumentContext()$path
+#     ggsave(file, dpi=dpi, width=dev.size()[1], height = dev.size()[2],
+#            path=paste0(getwd(),"/html/images/"))
+# }
 
 
 # .graphwindow(5,17)
@@ -1076,157 +1076,157 @@ print(pathtofile)
 
 
 
-.devpdf_2022.12.11 <- function(file, wd="./graphs", open=FALSE, overwrite=FALSE, caption=NULL, powerpoint=TRUE, slidetitle=NULL,
-                    png=TRUE, tf=NULL, meta=TRUE, NotesInput=FALSE, Notes="", history=TRUE){
-  require("rstudioapi")
-  tf <- rstudioapi::getActiveDocumentContext()$path
-  if (is.null(wd)) wd=getwd()
-  #if ((meta) && (is.null(tf))) tf<-.getfile()
-  file <- .clean(file)
-  ff<-paste(wd,"/",file,".pdf",sep="")
-  ff<-gsub('//', '/', ff)  ## interior spaces
-  ff<-gsub('.pdf.pdf', '.pdf', ff)
-  if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
-    if (!overwrite) {
-      print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
-      #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
-      #dev.copy2pdf(file=ff)}
-      browseURL(ff)
-    }
-  if (open) browseURL(ff)
-  if (png) {
-    .pdf2png(ff)
-  }
-  if ((meta) && (tf!="n")) {
-    sink(paste0(gsub("graphs/", "", ff), ".metadata.md"))
-    cat("\n### Script file: ")
-    cat(paste0("\n", tf))
-    cat("\n")
-
-    if (NotesInput) {
-      cat("Approximate line: ", readline("Approx. line? "))
-      cat("\nNotes: ", readline("Notes? "))
-      cat("\nFigure #: ", readline("Figure #: "))
-    }
-    cat("\nTimestamp: ", date(), "\n")
-    cat("\n### ", .clean(file))
-    cat(paste0("\nCaption: ", caption,'\n'))
-    cat("\n![", .clean(file), "](./html/images/",.clean(file), ".png)", sep="")
-    cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
-    #cat("\n\n[", .clean(file), "_png]:", sep="")
-    #cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    #cat("\n\n[", .clean(file), "]:", sep="")
-    #cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    cat(paste0("\n", "Notes: ", Notes))
-    cat("\n------\n")
-    .sinkall()
-  }
-  if (history) {
-    sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
-    cat(paste0("\n### Script file: ", tf))
-    cat("\n")
-    cat("\nTimestamp: ", date(), "\n")
-
-    cat("\n###", .clean(file))
-    cat(paste0("\nCaption: ", caption,'\n'))
-    cat("\n![", .clean(file), "](./html/images/",.clean(file), ".png)", sep="")
-    cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
-
-    # cat("\n## ", .clean(file))
-    # cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
-    # cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    # cat("\n\n[", .clean(file), "_png]:", sep="")
-    # cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    # cat("\n\n[", .clean(file), "]:", sep="")
-    # cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    cat(paste0("\n", "Notes: ", Notes))
-    cat("\n------\n")
-    .sinkall()
-  }
-
-  #make Powerpoint
-  if (powerpoint) {
-    if (is.null(caption)) caption <- .clean(file)
-    if (is.null(slidetitle)) slidetitle <- .clean(file)
-    sink(paste0(getwd(), "/powerpoint.md"), append = TRUE)
-    #cat(paste0("\n### Script file: ", tf))
-    cat("\n\n# ", slidetitle, sep="")
-    cat("\n![", caption, "](./html/images/",.clean(file), ".png)", sep="")
-    cat("\n")
-    .sinkall()
-  }
-
-
-  print(ff)
-  Sys.sleep(1.3)
-  print(paste0(gsub("graphs/", "", ff), ".metadata.md"))
-  # browseURL(paste0(gsub("graphs/", "", ff), ".metadata.md"), browser = "C:/Program Files/Mozilla Firefox/firefox.exe")
-  if (open) browseURL(paste0(gsub("graphs/", "", ff), ".metadata.md"), browser = "C:/Users/jrg1035/AppData/Local/Markdown Monster/MarkdownMonster.exe")
-}
-
-
-.devpdf.2020.06.07 <- function(file, wd="./graphs", open=FALSE, overwrite=FALSE,
-                    png=FALSE, tf=NULL, meta=TRUE, Notes=FALSE, history=TRUE){
-  require("rstudioapi")
-  tf <- rstudioapi::getActiveDocumentContext()$path
-  if (is.null(wd)) wd=getwd()
-  if ((meta) && (is.null(tf))) tf<-.getfile()
-  file <- .clean(file)
-  ff<-paste(wd,"/",file,".pdf",sep="")
-  ff<-gsub('//', '/', ff)  ## interior spaces
-  ff<-gsub('.pdf.pdf', '.pdf', ff)
-  if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
-    if (!overwrite) {
-      print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
-      #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
-      #dev.copy2pdf(file=ff)}
-      browseURL(ff)
-    }
-  if (open) browseURL(ff)
-  if (png) {
-    .pdf2png(ff)
-  }
-  if ( (meta) && (tf!="n") ) {
-    sink(paste0(ff, ".metadata.md"))
-    cat("Script file:  ")
-    cat(paste0("\n", tf))
-    cat("\n")
-
-    if (Notes) {
-      cat("Approximate line: ", readline("Approx. line? "))
-      cat("\nNotes: ", readline("Notes? "))
-      cat("\nFigure #: ", readline("Figure #: "))
-    }
-    cat("\nTimestamp: ", date(), "\n")
-    cat("\n##", .clean(file))
-    cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
-    cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    cat("\n\n[", .clean(file), "_png]:", sep="")
-    cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    cat("\n\n[", .clean(file), "]:", sep="")
-    cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    cat("\n------")
-    .sinkall()
-  }
-  if (history) {
-    sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
-    cat(paste0("\nScript file: ", tf))
-    cat("\n")
-    cat("\nTimestamp: ", date(), "\n")
-    cat("\n##", .clean(file))
-    cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
-    cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    cat("\n\n[", .clean(file), "_png]:", sep="")
-    cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    cat("\n\n[", .clean(file), "]:", sep="")
-    cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
-    cat("\n------")
-    .sinkall()
-  }
-  print(ff)
-  if (open)  browseURL(paste0(gsub("graphs/", "", ff), ".metadata.md"))
-}
-
+# .devpdf_2022.12.11 <- function(file, wd="./graphs", open=FALSE, overwrite=FALSE, caption=NULL, powerpoint=TRUE, slidetitle=NULL,
+#                     png=TRUE, tf=NULL, meta=TRUE, NotesInput=FALSE, Notes="", history=TRUE){
+#   require("rstudioapi")
+#   tf <- rstudioapi::getActiveDocumentContext()$path
+#   if (is.null(wd)) wd=getwd()
+#   #if ((meta) && (is.null(tf))) tf<-.getfile()
+#   file <- .clean(file)
+#   ff<-paste(wd,"/",file,".pdf",sep="")
+#   ff<-gsub('//', '/', ff)  ## interior spaces
+#   ff<-gsub('.pdf.pdf', '.pdf', ff)
+#   if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
+#     if (!overwrite) {
+#       print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
+#       #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
+#       #dev.copy2pdf(file=ff)}
+#       browseURL(ff)
+#     }
+#   if (open) browseURL(ff)
+#   if (png) {
+#     .pdf2png(ff)
+#   }
+#   if ((meta) && (tf!="n")) {
+#     sink(paste0(gsub("graphs/", "", ff), ".metadata.md"))
+#     cat("\n### Script file: ")
+#     cat(paste0("\n", tf))
+#     cat("\n")
+#
+#     if (NotesInput) {
+#       cat("Approximate line: ", readline("Approx. line? "))
+#       cat("\nNotes: ", readline("Notes? "))
+#       cat("\nFigure #: ", readline("Figure #: "))
+#     }
+#     cat("\nTimestamp: ", date(), "\n")
+#     cat("\n### ", .clean(file))
+#     cat(paste0("\nCaption: ", caption,'\n'))
+#     cat("\n![", .clean(file), "](./html/images/",.clean(file), ".png)", sep="")
+#     cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
+#     #cat("\n\n[", .clean(file), "_png]:", sep="")
+#     #cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     #cat("\n\n[", .clean(file), "]:", sep="")
+#     #cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat(paste0("\n", "Notes: ", Notes))
+#     cat("\n------\n")
+#     .sinkall()
+#   }
+#   if (history) {
+#     sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
+#     cat(paste0("\n### Script file: ", tf))
+#     cat("\n")
+#     cat("\nTimestamp: ", date(), "\n")
+#
+#     cat("\n###", .clean(file))
+#     cat(paste0("\nCaption: ", caption,'\n'))
+#     cat("\n![", .clean(file), "](./html/images/",.clean(file), ".png)", sep="")
+#     cat("\n\n###### ", gsub("\\./", paste0(getwd(), "/"), ff), sep="")
+#
+#     # cat("\n## ", .clean(file))
+#     # cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
+#     # cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     # cat("\n\n[", .clean(file), "_png]:", sep="")
+#     # cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     # cat("\n\n[", .clean(file), "]:", sep="")
+#     # cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat(paste0("\n", "Notes: ", Notes))
+#     cat("\n------\n")
+#     .sinkall()
+#   }
+#
+#   #make Powerpoint
+#   if (powerpoint) {
+#     if (is.null(caption)) caption <- .clean(file)
+#     if (is.null(slidetitle)) slidetitle <- .clean(file)
+#     sink(paste0(getwd(), "/powerpoint.md"), append = TRUE)
+#     #cat(paste0("\n### Script file: ", tf))
+#     cat("\n\n# ", slidetitle, sep="")
+#     cat("\n![", caption, "](./html/images/",.clean(file), ".png)", sep="")
+#     cat("\n")
+#     .sinkall()
+#   }
+#
+#
+#   print(ff)
+#   Sys.sleep(1.3)
+#   print(paste0(gsub("graphs/", "", ff), ".metadata.md"))
+#   # browseURL(paste0(gsub("graphs/", "", ff), ".metadata.md"), browser = "C:/Program Files/Mozilla Firefox/firefox.exe")
+#   if (open) browseURL(paste0(gsub("graphs/", "", ff), ".metadata.md"), browser = "C:/Users/jrg1035/AppData/Local/Markdown Monster/MarkdownMonster.exe")
+# }
+#
+#
+# .devpdf.2020.06.07 <- function(file, wd="./graphs", open=FALSE, overwrite=FALSE,
+#                     png=FALSE, tf=NULL, meta=TRUE, Notes=FALSE, history=TRUE){
+#   require("rstudioapi")
+#   tf <- rstudioapi::getActiveDocumentContext()$path
+#   if (is.null(wd)) wd=getwd()
+#   if ((meta) && (is.null(tf))) tf<-.getfile()
+#   file <- .clean(file)
+#   ff<-paste(wd,"/",file,".pdf",sep="")
+#   ff<-gsub('//', '/', ff)  ## interior spaces
+#   ff<-gsub('.pdf.pdf', '.pdf', ff)
+#   if ((overwrite) || (!(file.exists(ff)))) dev.copy2pdf(file=ff) else
+#     if (!overwrite) {
+#       print("File already exists.  Opening existing file. Or choose overwrite=TRUE")
+#       #ff<-paste(wd,"/",file,format(Sys.time(), "%Y%m%dhr%H"),".pdf",sep="_")
+#       #dev.copy2pdf(file=ff)}
+#       browseURL(ff)
+#     }
+#   if (open) browseURL(ff)
+#   if (png) {
+#     .pdf2png(ff)
+#   }
+#   if ( (meta) && (tf!="n") ) {
+#     sink(paste0(ff, ".metadata.md"))
+#     cat("Script file:  ")
+#     cat(paste0("\n", tf))
+#     cat("\n")
+#
+#     if (Notes) {
+#       cat("Approximate line: ", readline("Approx. line? "))
+#       cat("\nNotes: ", readline("Notes? "))
+#       cat("\nFigure #: ", readline("Figure #: "))
+#     }
+#     cat("\nTimestamp: ", date(), "\n")
+#     cat("\n##", .clean(file))
+#     cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
+#     cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat("\n\n[", .clean(file), "_png]:", sep="")
+#     cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat("\n\n[", .clean(file), "]:", sep="")
+#     cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat("\n------")
+#     .sinkall()
+#   }
+#   if (history) {
+#     sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
+#     cat(paste0("\nScript file: ", tf))
+#     cat("\n")
+#     cat("\nTimestamp: ", date(), "\n")
+#     cat("\n##", .clean(file))
+#     cat("\n[![", .clean(file), "][", .clean(file),"_png]][",.clean(file), "]", sep="")
+#     cat("\n", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat("\n\n[", .clean(file), "_png]:", sep="")
+#     cat("\nfile:///", gsub(".pdf", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat("\n\n[", .clean(file), "]:", sep="")
+#     cat("\nfile:///", gsub(".dummy1", ".png", gsub("\\./", paste0(getwd(), "/"), ff)), sep="")
+#     cat("\n------")
+#     .sinkall()
+#   }
+#   print(ff)
+#   if (open)  browseURL(paste0(gsub("graphs/", "", ff), ".metadata.md"))
+# }
+#
 
 # old version for mac
 # .devpdf<-function(file, wd="./graphs", open=TRUE, overwrite=FALSE, png=FALSE, tf=NULL, meta=TRUE){

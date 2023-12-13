@@ -20,27 +20,26 @@
   ff<-paste(file,".pdf",sep="")
   ff<-gsub('//', '/', ff)  ## interior spaces
   ff<-gsub('.pdf.pdf', '.pdf', ff)
-  fileExists <- ifelse(any(ff==substring(list.files(pdfPath),4,100)), TRUE, FALSE)
-  if (overwrite && fileExists) {
+  <- <- <- <- <- <- <- <- <- <-
     ff <- list.files(pdfPath)[which(ff==substring(list.files(pdfPath),4,100))]
-  } else {
-    inc <- ifelse(((!overwrite) && fileExists),0,1)
-    nextNum <- formatC(mxCur+inc, width = 2, format = "d", flag = "0")
-    ff <- paste0(nextNum, "_", ff)
-  }
-  # ff
-  #
-  # if (!overwrite){
-  #     mxCur <- max(is.na(as.numeric((gsub("\\D", "", substring(list.files(pdfPath), 1,2))))), na.rm=TRUE)
-  #     nextNum <- formatC(mxCur, width = 2, format = "d", flag = "0")
-  #     ff <- paste0(nextNum, "_", ff)
-  #
-  # }
-  # tmpMaxannotNum <- as.numeric(gsub("\\D", "", substring(list.files(annotationsPath, pattern = "*.annot.md"), 1,2)))
-  #     if (all(is.na(tmpMaxannotNum))) mxCur <- 0 else mxCur <- max(tmpMaxannotNum, na.rm=TRUE)
-  #     if (overwrite & mxCur>0) mxCur <- mxCur-1
-  #     nextNum <- formatC(mxCur, width = 2, format = "d", flag = "0")
-  #     annotFilenameCheck <- paste0(nextNum, "_", ff, ".annot.md")
+} else {
+  inc <- ifelse(((!overwrite) && fileExists),0,1)
+  nextNum <- formatC(mxCur+inc, width = 2, format = "d", flag = "0")
+  ff <- paste0(nextNum, "_", ff)
+}
+# ff
+#
+# if (!overwrite){
+#     mxCur <- max(is.na(as.numeric((gsub("\\D", "", substring(list.files(pdfPath), 1,2))))), na.rm=TRUE)
+#     nextNum <- formatC(mxCur, width = 2, format = "d", flag = "0")
+#     ff <- paste0(nextNum, "_", ff)
+#
+# }
+# tmpMaxannotNum <- as.numeric(gsub("\\D", "", substring(list.files(annotationsPath, pattern = "*.annot.md"), 1,2)))
+#     if (all(is.na(tmpMaxannotNum))) mxCur <- 0 else mxCur <- max(tmpMaxannotNum, na.rm=TRUE)
+#     if (overwrite & mxCur>0) mxCur <- mxCur-1
+#     nextNum <- formatC(mxCur, width = 2, format = "d", flag = "0")
+#     annotFilenameCheck <- paste0(nextNum, "_", ff, ".annot.md")
   #     ff <- paste0(nextNum, "_", ff)
   if (!any(list.dirs()=="./notesGraphAnnot")) dir.create("./notesGraphAnnot") #else print("")
   #overwrite <- FALSE
