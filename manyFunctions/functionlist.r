@@ -8,6 +8,12 @@ require(data.table)
 R.version
 #.gitbash()
 
+.getProjName <- function(){
+  require(rstudioapi)
+  tmp <- strsplit(rstudioapi::getActiveProject(),"/")[[1]][length(strsplit(rstudioapi::getActiveProject(),"/")[[1]])]
+  return(tmp)
+}
+
 .graphwindow <- function(height=6, width=6, mar=c(6,6,1,1), xpos=500, ypos=150){
     if (.Platform$OS.type == "windows") x11(height=height, width=width, xpos=xpos, ypos=ypos) else
         quartz(height=height, width=width)
