@@ -116,14 +116,15 @@ R.version
 #   }
 # }
 
-
-
 # .gitbash function -------------------------------------------------------
 
 .gitbash <- function(wd=getwd(), gitpath="C:/Program Files/Git/git-bash.exe"){
-    if (wd=="rt") wd <- "/Users/jrg1035/GitProjects/JGTools/"
-    wd <- list.dirs()[grep('.git+$', list.dirs())]
-    wduse <- gsub("/.git", "", wd)
+    if (wd=="rt") wd <- "C:/Users/jrg1035/GitProjects/JGTools/"
+    print(wd)
+    wd1 <- list.dirs()[grep('.git+$', list.dirs())]
+    (wduse <- gsub("/.git", "", wd1))
+    print(wd1)
+    wduse <- wd
     system(wait=FALSE, eval( paste0("\"", gitpath, "\" --cd=", wduse)))
     #system('"C:/Program Files/Git/git-bash.exe" --cd="C:/Users/jrg1035/GitProjects/r_ascc.insects.cz"', wait=FALSE)
 
