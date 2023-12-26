@@ -121,6 +121,7 @@ R.version
 # .gitbash function -------------------------------------------------------
 
 .gitbash <- function(wd=getwd(), gitpath="C:/Program Files/Git/git-bash.exe"){
+    if (wd=="rt") wd <- "/Users/jrg1035/GitProjects/JGTools/"
     wd <- list.dirs()[grep('.git+$', list.dirs())]
     wduse <- gsub("/.git", "", wd)
     system(wait=FALSE, eval( paste0("\"", gitpath, "\" --cd=", wduse)))
@@ -1483,8 +1484,8 @@ sinklist <- "./html/basic structure of data collection.md"
 
 .bu<-function(x=getwd()){
   require(rstudioapi)
-    tmp <- gsub("[[:space:]]", "%20", x)
-    if (substring(x, (nchar(tmp)-1), nchar(tmp)) == ".r") rstudioapi::navigateToFile(eval(tmp)) else browseURL(eval(tmp))
+    tmp <- x # gsub("[[:space:]]", "%20", x)
+    if (substring(tolower(x), (nchar(tmp)-1), nchar(tmp)) == ".r") rstudioapi::navigateToFile(eval(tmp)) else browseURL(eval(tmp))
     }
 
 .bmaster<-function(file, open=TRUE){  #assumes a global "master" df
