@@ -1,5 +1,13 @@
 # load common libraries and source specific functions
 
+# REPLACES local loadPackagesFunctions.r
+#Rather run source("https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R")
+
+print("See: ./lib/loadPackagesFunction_editable.R for an editable version of the loadPackagesFunctions file.")
+
+url <- "https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R"
+download.file(url, "./lib/loadPackagesFunction_editable.R")
+
 # install devtools and JGTools
 #install.packages("devtools", update=TRUE)
 library(devtools)
@@ -38,7 +46,7 @@ library(devtools)
 .libraryInstallorLoad("knitr")
 .libraryInstallorLoad("kableExtra")
 
-options(knitr.table.format = "pipe") 
+options(knitr.table.format = "pipe")
 
 # load other functions from Dropbox
 #source(sourceDropbox("https://www.dropbox.com/s/xgbv7suucwf57xq/functionlist.r?dl=0"))
@@ -60,7 +68,7 @@ for (i in libs){ vers <- c(vers, as.character(packageVersion(eval(i)))) }
 cat(paste0("## R version, latest run: ", R.version.string, "\n\n## Today:  ", date(),
            "\n\nLoaded packages:\n\n"), file="R.version.latestused.md")
 cat(kable(data.frame(libs, vers)), file="R.version.latestused.md", append=TRUE, sep="\n")
-    
+
 
 print(data.frame(libs, vers))
 print(paste0("R version, latest run: ", R.version.string))
