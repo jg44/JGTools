@@ -3,10 +3,6 @@
 # REPLACES local loadPackagesFunctions.r
 #Rather run source("https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R")
 
-print("See: ./lib/loadPackagesFunction_editable.R for an editable version of the loadPackagesFunctions file.")
-
-url <- "https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R"
-download.file(url, "./lib/loadPackagesFunction_editable.R")
 
 # install devtools and JGTools
 #install.packages("devtools", update=TRUE)
@@ -75,3 +71,9 @@ print(paste0("R version, latest run: ", R.version.string))
 print(paste0("Today: ", date()))
 
 .bu("README.md")
+
+
+print("See: ./lib/loadPackagesFunction_editable.R for an editable version of the loadPackagesFunctions file.")
+
+url <- "https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R"
+download.file(url, "./lib/loadPackagesFunction_editable.R")
