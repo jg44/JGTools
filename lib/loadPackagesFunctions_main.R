@@ -72,6 +72,6 @@ print(paste0("Today: ", date()))
 
 .bu("README.md")
 
-# This doesn't work for some reason but it can be run locally to get a local version
+print("See editable copy here: ./lib/loadPackagesFunction_editable.R")
 url <- "https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R"
 download.file(url, "./lib/loadPackagesFunction_editable.R")
