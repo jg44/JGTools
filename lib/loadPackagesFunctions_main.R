@@ -17,7 +17,7 @@ library(devtools)
 }
 
 .libraryInstallorLoad("devtools")
-.libraryInstallorLoad("JGTools")
+#.libraryInstallorLoad("JGTools")
 #.libraryInstallorLoad("ProjectTemplate")
 .libraryInstallorLoad("data.table")
 .libraryInstallorLoad("vegan")
