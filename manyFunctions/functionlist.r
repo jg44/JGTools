@@ -1,6 +1,21 @@
 # updated 2022.12.30
 
+.getmd <- function(whichfile=NULL, path="./html", pattern = "^[0-9][0-9].+.md") {
+  # list files starting with ## and ending in .md
+  allfiles <- list.files(path=path, pattern=pattern)
+  if (!is.null(whichfile)) return(paste(path, allfiles[whichfile], sep="/")) else return(allfiles)
+}
 
+
+.renumberFiles <- function(whichfile=NULL, path="./html", pattern = "^[0-9][0-9].+.md"){
+  # renumber .md files in the html folder
+  allfiles <- .getmd(path=path, pattern=pattern)
+  for (i in 1:length(allfiles)){
+    new <- paste0(path, "/", formatC(i, width = 2, format = "d", flag = "0"), "_", substring(allfiles[i], 4,100))
+    file.rename(paste0(path, "/", allfiles[i]), new)
+  }
+
+}
 
 #require(JGTools)
 require(data.table)
@@ -1305,6 +1320,12 @@ return(paste0(ff, ".metadata.txt"))
 
             .sinkall()
         browseURL(file)
+}
+
+.st <- function(txt="", level=0){
+  header <- ifelse(level>0, paste(rep("#", level), collapse = ""), "")
+  cat("\n", header, ifelse(level>0, " ", ""), txt, "\n\n")
+
 }
 
 .annot <- function(txt, lev=2, charret=2){

@@ -5,6 +5,13 @@
     mxCur <- ifelse(((all(is.na(largestPdf))) || length(largestPdf)==0), 0, max(largestPdf, na.rm=TRUE))
 
     require("rstudioapi")
+    .getProjName <- function(){
+         if (!is.null(rstudioapi::getActiveProject())){
+          tmp <- strsplit(rstudioapi::getActiveProject(),"/")[[1]][length(strsplit(rstudioapi::getActiveProject(),"/")[[1]])]
+         } else tmp <- "Unknown_project"
+      return(tmp)
+         }
+
     if (is.null(pathtoMDeditor)) pathtoMDeditor <- "C:/Users/jrg1035/AppData/Local/Markdown Monster/MarkdownMonster.exe"
     # edited 2023.12.07
     tf <- rstudioapi::getActiveDocumentContext()$path
