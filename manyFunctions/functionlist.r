@@ -145,8 +145,9 @@ R.version
 
 }
 
+# .gitbash()
 .lastfile <- c("MASTERFILE.R")
-getwd()
+#getwd()
 
 .open <- function(file="MASTERFILE.R") {
     list.files(recursive=TRUE)
