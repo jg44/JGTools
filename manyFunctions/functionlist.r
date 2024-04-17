@@ -1,4 +1,4 @@
-# updated 2022.12.30
+# updated 2022.12.30 # C:/Users/jrg1035/GitProjects/JGTools/manyFunctions/functionlist.r
 
 .getmd <- function(whichfile=NULL, path="./html", pattern = "^[0-9][0-9].+.md") {
   # list files starting with ## and ending in .md
@@ -1323,11 +1323,12 @@ return(paste0(ff, ".metadata.txt"))
         browseURL(file)
 }
 
-.st <- function(txt="", level=0){
+.sinkaddtxt <- function(txt="", level=0){
   header <- ifelse(level>0, paste(rep("#", level), collapse = ""), "")
   cat("\n", header, ifelse(level>0, " ", ""), txt, "\n\n")
-
 }
+
+
 
 .annot <- function(txt, lev=2, charret=2){
     if (!is.null(lev)) levuse <- paste0(c(rep("#", lev), " "), collapse = "") else levuse <- ""
@@ -1363,6 +1364,53 @@ sinklist <- "./html/basic structure of data collection.md"
 
 .sinkall <- function() while (sink.number()>0) { sink() }
 .sa <- .sinkall
+
+.sink_echo <- function(command){
+  commandtxt <- as.character(substitute(paste0("(",command,")")))
+  output <- capture.output({
+    # Print the command to the console
+    cto <- gsub("paste0", "", commandtxt)
+    cat("\n\n```\n> ", cto, "\n````\n")
+
+    #cat("\n\n```\n", commandtxt, "\n````\n")
+
+    # Evaluate the command
+    eval(command)
+  })
+  cat(output, sep = "\n")
+}
+
+sinklist <- "./html/testh.md"
+.sink()
+  .stadd("Add a hedear", 1)
+  .sink_echo(kable(table(rep(1:3,4))))
+  cat(singleString)
+.sa()
+.bu(sinklist)
+
+.addpng <- function(pathtoAddition){
+  parsename <- strsplit(pathtoAddition, "\\.")[[1]]
+   cat("______\n")
+  if (parsename[length(parsename)]=="png") {
+    pngPath <- gsub("/html/" ,"/", pathtoAddition)
+    cat(pngPath)
+    cat(
+      paste0("![",pngPath,"]","(",pngPath,")", collapse="")
+    )
+  } else {
+    singleString <- paste(readLines(pathtoAddition), collapse="\n")
+    cat(singleString)
+  }
+
+}
+.sink()
+.stadd("askdjf laksjfd")
+.addpng(pathtoAddition)
+.sa()
+.bu(sinklist)
+pathtoAddition <- "./html/images/01_larval_establishment_by_dbh_and_treatment.png"
+
+
 
 
 .meansd<-function(x, rnd=1, se=F, nospace=F){
