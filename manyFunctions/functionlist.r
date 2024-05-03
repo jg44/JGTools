@@ -1403,14 +1403,17 @@ sinklist <- "./html/testh.md"
   }
 
 }
-.sink()
-.stadd("askdjf laksjfd")
-.addpng(pathtoAddition)
-.sa()
-.bu(sinklist)
-pathtoAddition <- "./html/images/01_larval_establishment_by_dbh_and_treatment.png"
+# .sink()
+# .stadd("askdjf laksjfd")
+# .addpng(pathtoAddition)
+# .sa()
+# .bu(sinklist)
+# pathtoAddition <- "./html/images/01_larval_establishment_by_dbh_and_treatment.png"
 
-
+.stadd <- function(txt="", level=0){
+  header <- ifelse(level>0, rep("#", level), "")
+  cat("\n", header, ifelse(level>0, " ", ""), txt, "\n\n")
+}
 
 
 .meansd<-function(x, rnd=1, se=F, nospace=F){
