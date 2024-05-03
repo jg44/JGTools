@@ -1380,13 +1380,13 @@ sinklist <- "./html/basic structure of data collection.md"
   cat(output, sep = "\n")
 }
 
-sinklist <- "./html/testh.md"
-.sink()
-  .stadd("Add a hedear", 1)
-  .sink_echo(kable(table(rep(1:3,4))))
-  cat(singleString)
-.sa()
-.bu(sinklist)
+# sinklist <- "./html/testh.md"
+# .sink()
+#   .stadd("Add a hedear", 1)
+#   .sink_echo(kable(table(rep(1:3,4))))
+#   cat(singleString)
+# .sa()
+# .bu(sinklist)
 
 .addpng <- function(pathtoAddition){
   parsename <- strsplit(pathtoAddition, "\\.")[[1]]
