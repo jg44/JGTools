@@ -2076,3 +2076,21 @@ return(mergetable)
               ybottom = y-(HEIu/2), ytop = y+(HEIu/2),
               interpolate = interpolate)
 }
+
+
+
+.sigmoid <- function(xrange=c(0,1), yrange=c(0,1), inflection=.5){
+  xmax <- ifelse (length(xrange)==1, xrange, max(xrange))
+  ymax <- ifelse (length(yrange)==1, yrange, max(yrange))
+  xmin <- ifelse (length(xrange)==1, 0, min(xrange))
+  ymin <- ifelse (length(yrange)==1, 0, min(yrange))
+
+  x2 <- seq(.01,10, .01)
+
+  xout <- (x2/max(x2))*xmax
+  yy <- ymin + (1 / (1 + exp(-(x2-inflection*10))) )
+
+  yout <- yy/max(yy)*ymax
+  xout <- seq(xmin, xmax, length.out=length(yout))
+  return(data.frame(xout,yout))
+}
