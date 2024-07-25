@@ -1,5 +1,25 @@
 # updated 2022.12.30 # C:/Users/jrg1035/GitProjects/JGTools/manyFunctions/functionlist.r
 
+# ggplot2 functions
+
+themeJG <- function() {
+  theme_minimal() +
+    theme(
+      text = element_text(size = 20),
+      axis.text.y = element_text(margin = margin(r = 10)),  # Adjust space for y-axis text
+      axis.title.y = element_text(margin = margin(r = 20, l = 20)),  # Increase space for y-axis label
+      panel.grid.major = element_blank(),  # Remove major gridlines
+      panel.grid.minor = element_blank(),  # Remove minor gridlines
+      axis.line.x.bottom = element_line(color = "black"),  # Bottom axis line
+      axis.line.y.left = element_line(color = "black"),  # Left axis line
+      axis.ticks = element_line(color = "black"),  # Make tick marks visible
+      axis.ticks.length = unit(0.25, "cm"),  # Lengthen axis ticks
+      axis.line.x.top = element_blank(),  # Remove top line
+      axis.line.y.right = element_blank(),  # Remove right line
+      panel.border = element_blank()  # Remove default border
+    )
+}
+
 .getmd <- function(whichfile=NULL, path="./html", pattern = "^[0-9][0-9].+.md") {
   # list files starting with ## and ending in .md
   allfiles <- list.files(path=path, pattern=pattern)
@@ -2087,7 +2107,7 @@ return(mergetable)
 
   x2 <- seq(.01,10, .01)
 
-  ;xout <- (x2/max(x2))*xmax
+  # xout <- (x2/max(x2))*xmax
   yy <- (1 / (1 + exp(-(x2-inflection*10))) )
 
   # rescale y

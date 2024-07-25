@@ -74,4 +74,4 @@ print(paste0("Today: ", date()))
 
 print("See editable copy here: ./lib/loadPackagesFunction_editable.R")
 url <- "https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R"
-download.file(url, "./lib/loadPackagesFunction_editable.R")
+download.file(url, destfile="./lib/loadPackagesFunction_editable.R")
