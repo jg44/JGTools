@@ -2119,3 +2119,73 @@ return(mergetable)
   xout <- seq(xmin, xmax, length.out=length(yout))
   return(data.frame(xout,yout))
 }
+
+.knitrFunctions <- function(){
+  return(data.frame(mainFunctions=c(".mkMD", ".s1", ".k1", ".write_md"),
+             Desc=c("writes mdFilename", "", "", "write to an existing .md and close sink")))
+
+}
+#.knitrFunctions()
+
+
+
+# annotation tools
+.mkMD <- function(filename=NULL, title=NULL, notes=NULL,open=FALSE, createnew=FALSE){
+  print(filename)
+  if (!is.null(filename) & !is.null(mdFilename) & createnew) {
+    cat(paste0("By default, you can only write to one markdown capture file at a time. The current file is ",
+                 mdFilename,". If you want to set a new target, use createnew=TRUE.\n\n\n",
+                 "Set mdFilename to the output of this function to make this change durable."))
+    return()
+  }
+  if (!exists("mdFilename")) { mdFilename <- "keep";
+    print("mdFilename not in local environment. Using 'keep'.") }
+  #    if (is.null(listPickSort)) tmpList <- .listSorted() else tmpList <- .listSorted(listPickSort)
+  if (is.null(title)) title <- mdFilename
+  #file.create()
+  fnUse <- paste0("./html/", mdFilename, ".Notes.md")
+  if (!(file.exists(fnUse))) {
+    sink(fnUse)
+    #cat("<link rel=\"stylesheet\" href=\"RNotes.css\">\n")
+    cat("\n## ", title, "\n", format(Sys.Date(), "%Y %b %d"))}
+  else  sink(fnUse, append = TRUE)
+  if (!is.null(notes)) cat("\n\n### ", notes, "\n-------\n") else cat("\n-------\n")
+  # for (i in 1:nrow(tmpList)){
+  #     cat(paste0("\n### Figure ", tmpList[i,]$FigNum, ". ", tmpList[i,]$captions, "\n<br />\n"))
+  #     cat(paste0("\n\n![", tmpList[i,]$filename,"](./images/", tmpList[i,]$filename,")"))
+  #     cat(paste0("\n\n### Notes: ", tmpList[i,]$Notes), "\n------\n\n")
+  # }
+  # sink()
+  if (open) browseURL(fnUse)
+  #mk
+  return(mdFilename)
+}
+
+
+
+# use .mkMD WITH KABLE OR .sinkaddtxt(), followed by .sa()
+
+.s1 <- function(txt){
+  .mkMD()
+  .sinkaddtxt(txt)
+  .sa()
+}
+
+.k1 <- function(txt){
+  require("knitr")
+  .mkMD()
+  kable(txt)
+  .sa()
+}
+
+.write_md <- function(content, filename=paste0("./html/", mdFilename,".Notes.md")){
+  # Open the sink connection to the specified file
+  sink(filename, append = TRUE)
+
+  # Write the content to the file
+  cat("\n______\n",  content, "\n")
+
+  # Close the sink connection
+  sink()
+}
+
