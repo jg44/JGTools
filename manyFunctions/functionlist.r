@@ -363,7 +363,7 @@ R.version
   pngfile <- gsub("/", "\\\\", pngfile)
 
   pngfile <- gsub(".pdf", ".png", pngfile)
-  x <- paste0('"C:\\Program Files\\ImageMagick-7.1.0-Q16-HDRI\\magick.exe" convert -density 300 "', pdffile, '" -resize 40% "', pngfile)
+  x <- paste0('"C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe" -density 300 "', pdffile, '" -resize 40% "', pngfile)
   system(x)
   print(pdffile)
   print(pngfile)
