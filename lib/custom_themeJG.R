@@ -1,4 +1,10 @@
 # Define the custom theme
+
+source("https://raw.githubusercontent.com/jg44/JGTools/master/custom_themeJG.R")
+
+print(custom_themeJG)
+.sa()
+
 custom_themeJG <- theme_classic() + 
     theme(
         text = element_text(size = 24),          # Global text size

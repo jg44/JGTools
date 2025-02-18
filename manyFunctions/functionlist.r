@@ -658,6 +658,7 @@ R.version
 }
 
 
+
 .openRprofile <- function() {
     browseURL("C:/Program Files/R/R-4.2.1/etc/")
     print("Open as admistrator in notepad...")
@@ -1835,6 +1836,25 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
 }
 
 .emplot<-function(x=1, y=1, yl=NULL) plot(x,y, type="n", axes=F, xlab="", ylab="", ylim=yl)
+
+.ax <- function(bty="L", cex.axis=1.3, sides=c(1,2)){  ## JGTools
+  ls <- ifelse(i %in% c(2,4), 2,1)
+  for (i in sides) { axis(i, cex.axis=cex.axis, las=ifelse(i %in% c(2,4), 2,1)) }
+  box(bty=bty, lwd=2)
+}
+
+.mtx<-function(x="", y="", ln=c(3,3), cex=1.4, sides=c(1,2), cl=c(1,1)){
+  #is.null(x)
+  txt <- c(x, y)
+  #if (is.null(x)) {ln <- ln[1]; sides <- sides[1]; }
+  #opar<-par()
+  par(las=0)
+  for (i in 1:length(sides)){ mtext(txt[i], side=sides[i], line=ln[i], cex=cex, col=cl[i]) }
+  #mtext(side=2, y, line=line2, cex=cex)
+  #par(opar)
+}
+
+
 
 .mtxx<-function(x,y, line1=3, line2=3, cex=1.4){
  #opar<-par()
