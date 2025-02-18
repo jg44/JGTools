@@ -1,11 +1,8 @@
 # Define the custom theme
 
-source("https://raw.githubusercontent.com/jg44/JGTools/master/custom_themeJG.R")
+# source("https://raw.githubusercontent.com/jg44/JGTools/master/custom_themeJG.R")
 
-print(custom_themeJG)
-.sa()
-
-custom_themeJG <- theme_classic() + 
+custom_themeJG <- theme_classic() +
     theme(
         text = element_text(size = 24),          # Global text size
         axis.title = element_text(size = 24),    # Axis labels
