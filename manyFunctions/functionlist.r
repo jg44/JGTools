@@ -33,6 +33,37 @@
   cat("Saved to:", filename, "\n")
 }
 
+# .wc function (knitr, adds content text file mdFilename --------
+
+.wc <- function(content, mdFilename = NULL, kab = FALSE) {
+
+  require("knitr")
+
+  if (is.null(mdFilename)) {
+    if (exists("mdFilename", envir = .GlobalEnv)) {
+      mdFilename <- get("mdFilename", envir = .GlobalEnv)
+    } else {
+      mdFilename <- "keep"
+    }
+  }
+
+  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+
+  # Prepare content to write
+  out <- if (kab) as.character(kable(content)) else as.character(content)
+  full_out <- c("", "", out, "", "")
+
+  # Write to file
+  con <- file(filename, open = "a", encoding = "UTF-8")
+  on.exit(close(con))  # Ensure connection is closed even if error occurs
+  writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
+
+  # Also write to console
+  cat(paste(full_out, collapse = "\n"), "\n")
+  cat("Saved to:", filename, "\n")
+}
+
 
 
 
