@@ -1,3 +1,8 @@
+
+
+
+
+
 .html_graph<-function(graphfilepng, caption=NULL, showfilename=TRUE){
    if (!is.null(caption) & showfilename) caption<-paste(caption, graphfilepng, sep="\n")
    if (is.null(caption) & showfilename) caption<-graphfilepng

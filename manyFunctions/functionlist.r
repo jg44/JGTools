@@ -1,6 +1,75 @@
 # updated 2022.12.30 # C:/Users/jrg1035/GitProjects/JGTools/manyFunctions/functionlist.r
 
 # ggplot2 functions
+#browseURL(getwd())
+# .wk function (knitr, adds content wrapped in kable to file mdFil --------
+
+.wk <- function(content, mdFilename = NULL, kab = TRUE) {
+
+  require("knitr")
+
+  if (is.null(mdFilename)) {
+    if (exists("mdFilename", envir = .GlobalEnv)) {
+      mdFilename <- get("mdFilename", envir = .GlobalEnv)
+    } else {
+      mdFilename <- "keep"
+    }
+  }
+
+  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+
+  # Prepare content to write
+  out <- if (kab) as.character(kable(content)) else as.character(content)
+  full_out <- c("", "", out, "", "")
+
+  # Write to file
+  con <- file(filename, open = "a", encoding = "UTF-8")
+  on.exit(close(con))  # Ensure connection is closed even if error occurs
+  writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
+
+  # Also write to console
+  cat(paste(full_out, collapse = "\n"), "\n")
+  cat("Saved to:", filename, "\n")
+}
+
+
+
+
+.wf <- function(content, fullpath=FALSE, mdFilename = NULL) {
+  require("knitr")
+
+  if (is.null(mdFilename)) {
+    if (exists("mdFilename", envir = .GlobalEnv)) {
+      mdFilename <- get("mdFilename", envir = .GlobalEnv)
+    } else {
+      mdFilename <- "keep"
+    }
+  }
+
+  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+
+
+  # Open file connection in append mode
+  con <- file(filename, open = "a", encoding = "UTF-8")
+
+  if (!fullpath) figpath <- paste0("![](images/", content, ".png)") else figpath <-
+    paste0("![](", content, ".png)")
+
+  figpath <- gsub("\\.png\\.png", ".png", figpath)
+
+  # Write with proper spacing
+  writeLines(c("", "", as.character(figpath), "", ""),
+             con = con, sep = "\n", useBytes = TRUE)
+  close(con)
+
+  # Also write to console
+  cat(paste0(figpath, collapse = "\n"))
+  cat("\nSaved to: ", filename)
+}
+
+
 
 themeJG <- function() {
   theme_minimal() +
@@ -2141,11 +2210,11 @@ return(mergetable)
 }
 
 .knitrFunctions <- function(){
-  return(data.frame(mainFunctions=c(".mkMD", ".s1", ".k1", ".write_md"),
-             Desc=c("writes mdFilename", "", "", "write to an existing .md and close sink")))
+  return(data.frame(mainFunctions=c(".wc", ".wk", ".wf", ".mkMD", ".s1", ".k1", ".write_md"),
+             Desc=c("write phrase or number","writes kabler wrap","writes figure","writes mdFilename", "", "", "write to an existing .md and close sink")))
 
 }
-#.knitrFunctions()
+# .knitrFunctions()
 
 
 
