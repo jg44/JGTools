@@ -1,4 +1,5 @@
-# updated 2022.12.30 # C:/Users/jrg1035/GitProjects/JGTools/manyFunctions/functionlist.r
+# source("https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R")
+# updated 2025.04.16 # C:/Users/jrg1035/GitProjects/JGTools/manyFunctions/functionlist.r
 
 # ggplot2 functions
 #browseURL(getwd())
@@ -2308,4 +2309,15 @@ return(mergetable)
   # Close the sink connection
   sink()
 }
+
+
+# .currentpath function ---------------------------------------------------
+
+.currentpath <- function(folder=FALSE){
+  require("rstudioapi")
+  tf <- rstudioapi::getActiveDocumentContext()$path
+  if (folder) return(paste(strsplit(tf, split="/")[[1]][-length(strsplit(tf,
+                                                                         split="/")[[1]])], sep="", collapse="/")) else return(tf)
+}
+
 
