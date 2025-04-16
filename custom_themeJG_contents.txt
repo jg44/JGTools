@@ -298,7 +298,6 @@ List of 136
   ..$ inherit.blank: logi FALSE
   ..- attr(*, "class")= chr [1:2] "element_text" "element"
  $ legend.title.position           : NULL
- $ legend.position                 : chr "inside"
  $ legend.position.inside          : num [1:2] 0.85 0.85
  $ legend.direction                : NULL
  $ legend.byrow                    : NULL

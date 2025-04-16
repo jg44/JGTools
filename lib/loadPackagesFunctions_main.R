@@ -1,7 +1,7 @@
 # load common libraries and source specific functions
 
 # REPLACES local loadPackagesFunctions.r
-#Rather run source("https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R")
+# Rather run source("https://raw.githubusercontent.com/jg44/JGTools/master/lib/loadPackagesFunctions_main.R")
 
 
 # install devtools and JGTools
@@ -53,7 +53,7 @@ source("https://raw.githubusercontent.com/jg44/JGTools/master/manyFunctions/func
 source("https://raw.githubusercontent.com/jg44/JGTools/master/manyFunctions/devpdf_active.r")
 source("https://raw.githubusercontent.com/jg44/JGTools/master/manyFunctions/markdown_html_functions.r")
 
-custom_themeJG <- theme_classic() + 
+custom_themeJG <- theme_classic() +
     theme(
         text = element_text(size = 24),          # Global text size
         axis.title = element_text(size = 24),    # Axis labels
@@ -63,7 +63,7 @@ custom_themeJG <- theme_classic() +
         axis.title.y = element_text(margin = margin(r = 10)),  # Increase y-axis label distance
         axis.title.x = element_text(margin = margin(t = 10)),  # Move x-axis label down
         axis.text.x = element_text(margin = margin(t = 10)),   # Move x-axis tick labels down
-        legend.position = c(0.85, 0.85),         # Position inside, top-right corner
+        legend.position.inside = c(0.85, 0.85),         # Position inside, top-right corner
         legend.justification = c(1, 1),          # Anchor legend to bottom-right
         legend.background = element_rect(fill = "white", color = NA),  # White background for legend
         legend.box.just = "right",  # Align legend box to the right

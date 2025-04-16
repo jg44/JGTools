@@ -12,7 +12,7 @@ custom_themeJG <- theme_classic() +
         axis.title.y = element_text(margin = margin(r = 10)),  # Increase y-axis label distance
         axis.title.x = element_text(margin = margin(t = 10)),  # Move x-axis label down
         axis.text.x = element_text(margin = margin(t = 10)),   # Move x-axis tick labels down
-        legend.position = c(0.85, 0.85),         # Position inside, top-right corner
+        legend.position.inside = c(0.85, 0.85),         # Position inside, top-right corner
         legend.justification = c(1, 1),          # Anchor legend to bottom-right
         legend.background = element_rect(fill = "white", color = NA),  # White background for legend
         legend.box.just = "right",  # Align legend box to the right
