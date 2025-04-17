@@ -5,6 +5,41 @@
 #browseURL(getwd())
 # .wk function (knitr, adds content wrapped in kable to file mdFil --------
 
+
+# .wk function -------
+.wk <- function(content, mdFilename = NULL, kab = TRUE) {
+
+  require("knitr")
+
+  if (is.null(mdFilename)) {
+    if (exists("mdFilename", envir = .GlobalEnv)) {
+      mdFilename <- get("mdFilename", envir = .GlobalEnv)
+    } else {
+      mdFilename <- "keep"
+      print("No mdFilename. using 'keep.'")
+    }
+  }
+
+  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+
+  # Prepare content to write
+  out <- if (kab) as.character(kable(content)) else as.character(content)
+  full_out <- c("", "", out, "", "")
+
+  # Write to file
+  con <- file(filename, open = "a", encoding = "UTF-8")
+  on.exit(close(con))  # Ensure connection is closed even if error occurs
+  writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
+
+  # Also write to console
+  cat(paste(full_out, collapse = "\n"), "\n")
+  cat("Saved to:", filename, "\n")
+}
+
+# .wc function (knitr, adds content text file mdFilename --------
+
+# .wk function -------
 .wk <- function(content, mdFilename = NULL, kab = TRUE) {
 
   require("knitr")
@@ -70,6 +105,8 @@
 
 
 
+# .wf function ------------------------------------------------------------
+
 .wf <- function(content, fullpath=FALSE, mdFilename = NULL) {
   require("knitr")
 
@@ -106,6 +143,7 @@
 
 
 
+# themeJG function -------
 themeJG <- function() {
   theme_minimal() +
     theme(
@@ -124,6 +162,8 @@ themeJG <- function() {
     )
 }
 
+
+# .getmd function -------
 .getmd <- function(whichfile=NULL, path="./html", pattern = "^[0-9][0-9].+.md") {
   # list files starting with ## and ending in .md
   allfiles <- list.files(path=path, pattern=pattern)
@@ -131,6 +171,8 @@ themeJG <- function() {
 }
 
 
+
+# .renumberFiles function -------
 .renumberFiles <- function(whichfile=NULL, path="./html", pattern = "^[0-9][0-9].+.md"){
   # renumber .md files in the html folder
   allfiles <- .getmd(path=path, pattern=pattern)
@@ -147,12 +189,16 @@ require(data.table)
 R.version
 #.gitbash()
 
+
+# .getProjName function -------
 .getProjName <- function(){
   require(rstudioapi)
   tmp <- strsplit(rstudioapi::getActiveProject(),"/")[[1]][length(strsplit(rstudioapi::getActiveProject(),"/")[[1]])]
   return(tmp)
 }
 
+
+# .graphwindow function -------
 .graphwindow <- function(height=6, width=6, mar=c(6,6,1,1), xpos=500, ypos=150){
     if (.Platform$OS.type == "windows") x11(height=height, width=width, xpos=xpos, ypos=ypos) else
         quartz(height=height, width=width)
@@ -257,6 +303,8 @@ R.version
 
 # .gitbash function -------------------------------------------------------
 
+
+# .gitbash function -------
 .gitbash <- function(wd=getwd(), gitpath="C:/Program Files/Git/git-bash.exe"){
     if (wd=="rt") wd <- "C:/Users/jrg1035/GitProjects/JGTools/"
     print(wd)
@@ -273,6 +321,8 @@ R.version
 .lastfile <- c("MASTERFILE.R")
 #getwd()
 
+
+# .open function -------
 .open <- function(file="MASTERFILE.R") {
     list.files(recursive=TRUE)
     if (is.logical(file)) {
@@ -282,6 +332,8 @@ R.version
         assign(".lastfile", tf, envir = .GlobalEnv)
     }
 
+
+# .openlast function -------
 .openlast <- function(){
     if (exists(".lastfile")) browseURL(.lastfile) else print(".lastfile not defined.")
     require("rstudioapi")
@@ -289,6 +341,8 @@ R.version
     assign(".lastfile", tf, envir = .GlobalEnv)
 }
 
+
+# .updateEditFileDesc function -------
 .updateEditFileDesc <- function(df, columnmatch, open=TRUE, sortby=c("modified", "filename", "author")[1]){
   if (!dir.exists("./fileMetadata/")) dir.create("fileMetadata")
   if  (!file.exists("./fileMetadata/scriptDescriptions.csv")) write.csv(row.names = FALSE, file="./fileMetadata/scriptDescriptions.csv",
@@ -316,6 +370,8 @@ R.version
     if (open) browseURL("./fileMetadata/scriptDescriptions.csv")
 }
 
+
+# .updateEditFileDescData function -------
 .updateEditFileDescData <- function(df, columnmatch, open=TRUE, sortby=c("modified", "filename", "author")[1]){
     if (!dir.exists("./fileMetadata/")) dir.create("fileMetadata")
     if  (!file.exists("./fileMetadata/dataDescriptions.csv")) write.csv(row.names = FALSE, file="./fileMetadata/dataDescriptions.csv",
@@ -345,6 +401,8 @@ R.version
 # file.mtime(list.files(pattern="\\.csv$|\\.xls$\\.xlsx$", recursive=TRUE, ignore.case = TRUE))
 
 
+
+# .readFileDescriptions function -------
 .readFileDescriptions <- function(sortby=c("modified", "filename", "author")[1]){
     .updateEditFileDesc(open=FALSE, sortby=sortby)
     tmp <- read.csv(file="./fileMetadata/scriptDescriptions.csv")
@@ -359,6 +417,8 @@ R.version
     browseURL("./fileMetadata/FileDescriptions.md")
 }
 
+
+# .readFileDescriptionsData function -------
 .readFileDescriptionsData <- function(sortby=c("modified", "filename", "author")[1]){
     .updateEditFileDescData(open=FALSE, sortby=sortby)
     tmp <- read.csv(file="./fileMetadata/dataDescriptions.csv")
@@ -373,6 +433,8 @@ R.version
     browseURL("./fileMetadata/dataDescriptions.md")
 }
 
+
+# .whichquantile function -------
 .whichquantile <- function(test, dist, decr=FALSE){
   q <- c()
   for (i in 1:length(test)){
@@ -382,6 +444,8 @@ R.version
   return(qP)
 }
 
+
+# .clip function -------
 .clip <- function(x=1, Rtoclipboard=TRUE, header=FALSE){
   if (Rtoclipboard) {
     write.table (x, "clipboard-128", sep="\t")
@@ -394,6 +458,8 @@ R.version
 }
 
 
+
+# .glu function -------
 .glu <- function(x){
   lowuse <- c(c(93,90,87), c(93,90,87)-10, c(93,90,87)-20, c(93,90)-30,0 )
   lge <- data.frame(  mark = c(rep(LETTERS[c(1:4, 6)], each=3))[-c(1,14:15)],
@@ -405,6 +471,8 @@ R.version
     if (between(x, lge$low[i], lge$high[i])) return(lge$mark[i])
   }}
 
+
+# .gradelookup function -------
 .gradelookup <- function(x){
   marks <- c()
   for (j in 1:length(x)){
@@ -416,6 +484,8 @@ R.version
 .lettergrades <- .gradelookup
 #.lettergrades(54)
 
+
+# .fileinc function -------
 .fileinc <- function(x, path="./graphs/", ft='.png', digs=2, inc=1){
   x <- gsub(".png", "", x)
   use=NULL
@@ -440,6 +510,8 @@ R.version
 
 # .fileinc(x="BCI_logrankAbundance")
 
+
+# .pngincrement function -------
 .pngincrement <- function(x, path="./graphs/", ft='.png', digs=2, inc=1){
   if (!dir.exists(path)) dir.create(path)
   tmp <- paste0(path, .fileinc(x, path, ft, digs, inc))
@@ -449,6 +521,8 @@ R.version
 .pnginc <- .pngincrement
 
 
+
+# .addsubplotletter function -------
 .addsubplotletter <- function(lett, separator=")", location="topleft", inset=c(-.05, 0)){
   par(new=TRUE); .plot(1,1); legend(legend=paste0(lett, separator), x=location, bty="n", cex=2, inset=inset)
 }
@@ -458,6 +532,8 @@ R.version
 # (!dir.exists("html/images"))
 
 
+
+# .pdf2png function -------
 .pdf2png <- function(pdffile){
 
   if (!dir.exists("html")) dir.create("html")
@@ -477,8 +553,12 @@ R.version
 #
 # .pdf2png("C:/Users/jrg1035/Dropbox/R/Projects2019Win/Proj_SirexKatieFinalPush/R_SirexPaperKT2017/graphs/tunnel_length_by_position_and_larval_stage.pdf")
 
+
+# .getCaption function -------
 .getCaption <- function(fileName, tag="Caption:"){
 
+
+# breakFun function -------
   breakFun <- function(x){
     #function to replace empty lines with newline.
     if(nchar(x) == 0){
@@ -499,6 +579,8 @@ R.version
 
 
 
+
+# .listSorted function -------
 .listSorted <- function(whichpngs=NULL, dir=paste0(getwd(), "/html/images/"), pat="*.png"){
   tmpfl <- list.files(dir, pattern = pat)
   tmpflDate <- c(); captions <- c(); notes <- c()
@@ -528,6 +610,8 @@ R.version
 # .listSorted(c(4,2))
 
 # pngfilename <- .listSorted(3)
+
+# .addCaption function -------
 .addCaption <- function(pngfilename){
   if (is.data.frame(pngfilename)) pngfilename <- as.character(pngfilename$filename)
   for (i in 1:length(pngfilename)){
@@ -564,6 +648,8 @@ R.version
 
 
 
+
+# .makeMD function -------
 .makeMD <- function(listPickSort=NULL, filename, title=NULL, notes=""){
   if (is.null(listPickSort)) tmpList <- .listSorted() else tmpList <- .listSorted(listPickSort)
   if (is.null(title)) title <- filename
@@ -592,6 +678,8 @@ R.version
 
 
 
+
+# .ProjHist function -------
 .ProjHist <- function(x, title = NULL, date=FALSE){
   sink(paste0(getwd(), "/ProjectHistoryFile.md"), append = TRUE)
   if (date && !is.null(title)) cat(paste0("\n### ", title, ", ", format(Sys.time(), "%Y %M %d"))) else if (date)
@@ -604,7 +692,11 @@ R.version
 
 .ph <- .ProjHist
 
+
+# .tf function -------
 .tf <- function() { rstudioapi::getActiveDocumentContext()$path}
+
+# .addFigHTML function -------
 .addFigHTML<-function(pdffilename, targethtml=target, Caption="no caption",...){
   require(R2HTML)
   require(readtext)
@@ -626,11 +718,15 @@ R.version
   }
 }
 
+
+# .hist function -------
 .hist<-function(x=rnorm(100, 10, 1), marg=TRUE, breaks="Sturges", ...) {
   if (marg) {par(mar=c(6,7.5,1,1))}
   hist(x, xlab="", ylab="", axes=F, col="skyblue3", main="", breaks=breaks)
 }
 
+
+# .pointRaster function -------
 .pointRaster <- function(x, y, pchIcons=NULL, whichones,  cexIcons=1, offset=.05){
   library(png)
   require(grid)
@@ -656,6 +752,8 @@ R.version
 
 
 
+
+# .anyshape function -------
 .anyshape <- function(sx=0, sy=0, sides, rotation, radius=1, makeplot=FALSE, col="light blue"){
     xx=seq(0,2*pi, .01)
     if (makeplot) .plot(radius*cos(xx), radius*sin(xx))
@@ -670,18 +768,26 @@ R.version
 
 
 
+
+# .bellcurve function -------
 .bellcurve <- function(mean=0, sd=1, w=3.5){
   x <- seq(mean-w*sd, mean+w*sd, length.out = 1000 )
   y <- dnorm(x, mean=mean, sd=sd)
   return(data.frame(x,y))
 }
 
+
+# .plotbell function -------
 .plotbell <- function(mean=0, sd=1, w=3.5, col=4, lwd=2){
   points(.bellcurve(mean, sd, w), col=col, lwd=lwd, type="l")
 }
 
+
+# .bL function -------
 .bL <- function() {box(bty="L", lwd=2)}
 
+
+# .tolength function -------
 .tolength <- function(xx, l){
     tmp <- rep(xx, l%/%length(xx))
     if (length(tmp)<l) tmp <- c(tmp, xx[1:(l%%length(xx))])
@@ -691,6 +797,8 @@ R.version
 
 
 
+
+# .shapes function -------
 .shapes <- function(x, y, sides=1000, size=10, rot=0, lwd=1, lty=1, fill=0, border=1){
     l<-length(x)
     rot <- .tolength(rot, l)
@@ -718,6 +826,8 @@ R.version
 }
 
 
+
+# .shape function -------
 .shape <- function(x, y, sides=1000, size=10, rot=0, lwd=1, lty=1, fill=0, border=1, half=2){
     tur <- sides/2 + sides*rot/180
     print(rot)
@@ -731,7 +841,11 @@ R.version
     #points(x+x1, y+y1, col=1:6)
 }
 
+
+# .characters function -------
 .characters <- function(characters)
+
+# .rotateNodes function -------
 .rotateNodes <-function(tree,nodes,polytom=c(1,2),...){
     n<-length(tree$tip.label)
     if(nodes[1]=="all") nodes<-1:tree$Nnode+n
@@ -749,6 +863,8 @@ R.version
 }
 
 # install.packages("dplyr")
+
+# .pathPrep function -------
 .pathPrep <- function(path = "clipboard") {
   y <- if (path == "clipboard") {
     readClipboard()
@@ -763,12 +879,16 @@ R.version
 
 
 
+
+# .openRprofile function -------
 .openRprofile <- function() {
     browseURL("C:/Program Files/R/R-4.2.1/etc/")
     print("Open as admistrator in notepad...")
 
 }
 
+
+# .add_legend function -------
 .add_legend <- function(...) {
   opar <- par(fig=c(0, 1, 0, 1), oma=c(0, 0, 0, 0),
     mar=c(0, 0, 0, 0), new=TRUE)
@@ -778,6 +898,8 @@ R.version
 }
 
 
+
+# .setwdFileLoc function -------
 .setwdFileLoc <- function(tf) {
   tmp<- strsplit(tf, "/")[[1]]
   setwd(paste(tmp[-length(tmp)], sep="/", collapse="/"))
@@ -786,6 +908,8 @@ R.version
 
 
 
+
+# .read.csv.dt function -------
 .read.csv.dt<-function(file, datadir= "./data/", sep=",", header=TRUE){
     require(data.table)
     ff<- "ajf/sgs/"
@@ -793,14 +917,20 @@ R.version
     tmp <- data.table(read.csv(file, sep=sep, header=header, fileEncoding="UTF-8-BOM"))
 }
 
+
+# .ci95 function -------
 .ci95 <- function(x){
    error <- qt(0.975,df=length(x)-1)*sd(x)/sqrt(length(x))
    return(c(mean(x)-error, mean(x)+error))
 }
 
+
+# .trimSpaces function -------
 .trimSpaces <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 
+
+# .fileNotes function -------
 .fileNotes <- function(dirCode="./Code", drop=FALSE){  ## use this file to store metadata about all the project files.  Use .fileNav to navigate and open them.
 require(data.table)
    tmp <- list.files(dirCode, pattern ='.R$|.Rmd$', ignore.case = TRUE)
@@ -812,6 +942,8 @@ require(data.table)
    print(fileNotes)
 }
 
+
+# .fileNav function -------
 .fileNav <- function(x="MASTERFILE", fileN=fileNotes){
     # function to open files listed in masterfile (must be named MF)
     if (!exists("fileN")) print("No fileNotes variable");
@@ -839,6 +971,8 @@ require(data.table)
 #
 
 
+
+# .mf function -------
 .mf<-function(x="MASTERFILE", tmpMF=MF){
     # function to open files listed in masterfile (must be named MF)
     if (!exists("tmpMF")) print("Invalid masterfile")
@@ -850,12 +984,16 @@ require(data.table)
         .bu(MF[grep(x, names(tmpMF), ignore.case = TRUE)])
 }
 
+
+# .get_user function -------
 .get_user <- function(){
   env <- if(.Platform$OS.type == "windows") "USERNAME" else "USER"
   unname(Sys.getenv(env))
 }
 
 
+
+# .assign_with_metadata function -------
 .assign_with_metadata <- function(x, value, ..., pos = parent.frame(), inherits = FALSE)
 {
   # x (MUST be in quotes) is the name of the variable to be saved as important
@@ -874,6 +1012,8 @@ require(data.table)
 }
 
 
+
+# .rd.csv function -------
 .rd.csv <- function(varname, src, makefile=NULL, notes=NULL){
     require(data.table)
     .assign_with_metadata(eval(varname), data.table(.cleannames(read.csv(src))), source=src, makefile=makefile, notes=notes, pos=globalenv())
@@ -881,6 +1021,8 @@ require(data.table)
 
 
 
+
+# .saveImportant function -------
 .saveImportant <- function(){
   for (i in 1:length(.imptVars())) {saveRDS(eval(parse(text=.imptVars()[i])), eval(paste0("./data/", eval(.imptVars()[i]), ".rds" ) ))} }
 
@@ -890,6 +1032,8 @@ require(data.table)
 #
 # attributes(xx)
 # .rd.csv("xx, "/Users/jeff/Dropbox/katie_data/MasterFile_larvaeall.csv", makefile = thisfile, notes = "larv17 is the authoritative larvae variable but may contain unusable records")
+
+# .imptVars function -------
 .imptVars<-function(printattr=FALSE, lss=ls(globalenv()), notesOnly=TRUE ) {
     impVar<-c()
     impattr<-list(); j=0
@@ -930,15 +1074,21 @@ rstudioapi::getActiveDocumentContext()$path
 
 #dirname(sys.frame(1)$ofile)
 
+
+# .write.csv function -------
 .write.csv<-function(df, wd=getwd(), file){
     write.csv(df, paste(wd, file, sep="/"))
 }
+
+# .read.csv function -------
 .read.csv<-function(wd=getwd(), file){
     read.csv(paste(wd, file, sep="/"))
 }
 
 ##
 
+
+# .roundup function -------
 .roundup<-function(x, increm=1) {
     return(
     trunc(x / increm)*increm + ifelse((x %% increm)>0, increm, 0)
@@ -946,6 +1096,8 @@ rstudioapi::getActiveDocumentContext()$path
 }
 
 # .bin(x, breakby=10)
+
+# .bin function -------
 .bin<-function(x, minx=NULL, maxx=NULL, breakby=NULL, breaks=NULL, breakcount=10)   {
         if (is.null(minx)) minx<-floor(min(x))
     if (is.null(maxx)) maxx<-ceiling(max(x))
@@ -967,6 +1119,8 @@ rstudioapi::getActiveDocumentContext()$path
 }
 
 # .bin(x=1:13, breakby=3)
+
+# .readImportant function -------
 .readImportant <- function(datadir="./data/", overwrite=FALSE) {
   lf <- list.files(datadir, pattern=".rds")
   fn <- gsub(".rds", "", lf)
@@ -984,6 +1138,8 @@ rstudioapi::getActiveDocumentContext()$path
 
 
 
+
+# .groups function -------
 .groups <- function(groups=3, N, letterslength=26, countchars=2) {
     reps<-trunc(N/groups) + N %% groups
     df<-data.frame(LETTERS[1:letterslength], LETTERS[1:letterslength])
@@ -996,6 +1152,8 @@ rstudioapi::getActiveDocumentContext()$path
 
 
 
+
+# .rbind0 function -------
 .rbind0<-function(x, y){
     df<-data.frame(x=names(x), y=names(y))
     namez<-with(df, paste(x,y, sep="."))
@@ -1004,12 +1162,18 @@ rstudioapi::getActiveDocumentContext()$path
 }
 
 
+
+# .ordercols function -------
 .ordercols<-function(namesord,x){
     m<-match(namesord,names(x))
     return(x[,c(m, (1:ncol(x))[-m])])
 }
 
+
+# .capwords function -------
 .capwords <- function(s, strict = FALSE) {
+
+# cap function -------
     cap <- function(s) paste(toupper(substring(s, 1, 1)),
                   {s <- substring(s, 2); if(strict) tolower(s) else s},
                              sep = "", collapse = " " )
@@ -1019,6 +1183,8 @@ rstudioapi::getActiveDocumentContext()$path
 x <- "The Response Patterns of Arbuscular Mycorrhizal and Ectomycorrhizal Symbionts Under Elevated CO2: A Meta-Analysis"
 
 # x=sitedeets$site1 caps=c(14)
+
+# .title function -------
 .title<-function(x, caps=NULL, allcaps=NULL){
     x <- gsub("[\r\n]", " ", x)
     x <- gsub("^\\s+|\\s+$", "", x)
@@ -1035,6 +1201,8 @@ x <- "The Response Patterns of Arbuscular Mycorrhizal and Ectomycorrhizal Symbio
     file.show("outfile1.txt")
     }}
 
+
+# .leadingzeros function -------
 .leadingzeros <- function(ct=NULL, prefix="", suffix="", addnum="0", sep="_", leading=2, start=1){
    #ct=1:14
    l <- max(length(prefix), length(suffix))
@@ -1065,6 +1233,8 @@ x <- "The Response Patterns of Arbuscular Mycorrhizal and Ectomycorrhizal Symbio
 
 
 
+
+# .leadingzerosOLD function -------
 .leadingzerosOLD<-function(x, addchar="X", addnum="0"){
     nums<-as.numeric(regmatches(x, gregexpr("[0-9]+", x)))
     m<-max(nchar(nums))
@@ -1087,6 +1257,8 @@ x <- "The Response Patterns of Arbuscular Mycorrhizal and Ectomycorrhizal Symbio
 }
 
 
+
+# .as.data.frame.summary.aovlist function -------
 .as.data.frame.summary.aovlist <- function(x) {
    if(length(x) == 1) {
      as.data.frame(x[[1]])
@@ -1095,6 +1267,8 @@ x <- "The Response Patterns of Arbuscular Mycorrhizal and Ectomycorrhizal Symbio
    }
 }
 
+
+# .opendir function -------
 .opendir<-function(path=getwd()){
 print(data.frame(dir=list.dirs()[-grep(".Rproj", list.dirs())]))
 op<-as.numeric(readline("Directory #:  "))
@@ -1103,12 +1277,16 @@ print(pathtofile)
 .bu(pathtofile)
 }
 
+
+# .rangeoutput function -------
 .rangeoutput<-function(range, suffix=NULL){
     if (is.null(suffix)) suffix <- "" else suffix <- paste0(" ", suffix)
     paste0(range[-length(range)], "-", range[-1], suffix)
 }
 
 
+
+# .MakeNewProject function -------
 .MakeNewProject<-function(projname, path="~/Documents/R/projects2017/", openproject=FALSE){
    path1<-paste0(path, projname, "/")
       if (!dir.exists(path1)) dir.create(path1)
@@ -1133,6 +1311,8 @@ print(pathtofile)
 
 
 
+
+# .signif function -------
 .signif<-function(x) {
    ret<-rep("", length(x))
    ret[x<=0.1]<-"."
@@ -1143,6 +1323,8 @@ print(pathtofile)
    return(ret)
 }
 
+
+# .getfile function -------
 .getfile<-function(uniq=T, changepath=FALSE, diruse=getwd(), filter=".r"){
       lets<-c('couldnotpossiblybehere')
       if (changepath) diruse<-getwd()
@@ -1412,6 +1594,8 @@ print(pathtofile)
 # }
 
 
+
+# .devtext function -------
 .devtext<-function(file, wd="./graphs", open=TRUE, overwrite=TRUE, tf=NULL, meta=TRUE, header=""){
     require("rstudioapi")
     #file="kk"
@@ -1434,6 +1618,8 @@ return(paste0(ff, ".metadata.txt"))
          }
 
 
+
+# .sinktext function -------
 .sinktext<-function(file=NULL, addMeta=TRUE, notes, open=TRUE){
         cat("\n", notes,"\n_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_\n")
         # cat("Source script: ", tf,"\n")
@@ -1448,6 +1634,8 @@ return(paste0(ff, ".metadata.txt"))
         browseURL(file)
 }
 
+
+# .sinkaddtxt function -------
 .sinkaddtxt <- function(txt="", level=0){
   header <- ifelse(level>0, paste(rep("#", level), collapse = ""), "")
   cat("\n", header, ifelse(level>0, " ", ""), txt, "\n\n")
@@ -1455,6 +1643,8 @@ return(paste0(ff, ".metadata.txt"))
 
 
 
+
+# .annot function -------
 .annot <- function(txt, lev=2, charret=2){
     if (!is.null(lev)) levuse <- paste0(c(rep("#", lev), " "), collapse = "") else levuse <- ""
     charret <- paste0(c(rep("\n", charret)), collapse = "")
@@ -1463,6 +1653,8 @@ return(paste0(ff, ".metadata.txt"))
 .a <- .annot
 
 sinklist <- "./html/basic structure of data collection.md"
+
+# .sink function -------
 .sink <- function(txt=NULL, file=NULL, whichsink=99, append=TRUE){  #, sinklist=sinklist) {
     if (!exists("sinklist") & is.null(file)) {
         print("Need a filename or a sinklist variable")} else {
@@ -1487,9 +1679,13 @@ sinklist <- "./html/basic structure of data collection.md"
         }
 }
 
+
+# .sinkall function -------
 .sinkall <- function() while (sink.number()>0) { sink() }
 .sa <- .sinkall
 
+
+# .sink_echo function -------
 .sink_echo <- function(command){
   commandtxt <- as.character(substitute(paste0("(",command,")")))
   output <- capture.output({
@@ -1513,6 +1709,8 @@ sinklist <- "./html/basic structure of data collection.md"
 # .sa()
 # .bu(sinklist)
 
+
+# .addpng function -------
 .addpng <- function(pathtoAddition){
   parsename <- strsplit(pathtoAddition, "\\.")[[1]]
    cat("______\n")
@@ -1535,12 +1733,16 @@ sinklist <- "./html/basic structure of data collection.md"
 # .bu(sinklist)
 # pathtoAddition <- "./html/images/01_larval_establishment_by_dbh_and_treatment.png"
 
+
+# .stadd function -------
 .stadd <- function(txt="", level=0){
   header <- ifelse(level>0, rep("#", level), "")
   cat("\n", header, ifelse(level>0, " ", ""), txt, "\n\n")
 }
 
 
+
+# .meansd function -------
 .meansd<-function(x, rnd=1, se=F, nospace=F){
    med<-paste0("median = ",fivenum(x)[3],"; range = {",range(x)[1], ",",range(x)[2],"}" )
    if (se) ret<-paste(round(mean(x),rnd), round(sd(x)/sqrt(length(x)),rnd), sep=" ± ") else
@@ -1561,11 +1763,15 @@ sinklist <- "./html/basic structure of data collection.md"
 }
 
 
+
+# .plot function -------
  .plot<-function(marg=TRUE, ...) {
     if (marg) {par(mar=c(6,7.5,1,1))}
     plot(..., xlab="", ylab="", axes=F, type="n")
  }
 
+
+# .barplot function -------
  .barplot<-function(x, marg=TRUE, ...) {
    if (marg) {par(mar=c(8,8.5,1,1))}
   bp <- barplot(x, ..., xlab="", ylab="", axes=F, beside=TRUE)
@@ -1578,6 +1784,8 @@ sinklist <- "./html/basic structure of data collection.md"
 
 # .addse function ---------------------------------------------------------
 
+
+# .addse function -------
  .addse<-function(x, y, se, length=.07, col=1, horiz=FALSE, upperonly=FALSE){
 
    if (horiz) {minbar <- x-se; maxbar <- x+se; loc <- y} else {minbar <- y-se; maxbar <- y+se; loc <- x}
@@ -1597,9 +1805,13 @@ sinklist <- "./html/basic structure of data collection.md"
 
 
 
+
+# .plusmin function -------
  .plusmin<-function(x,rnd=1) {paste(round(x[,2],rnd), round(x[,3],rnd), sep=" ± ")}
 
 
+
+# .dpng function -------
 .dpng<-function(file, wd="graphs", open=TRUE, overwrite=FALSE, png=TRUE){
       if (is.null(wd)) wd=getwd()
          ff<-paste(wd,"/",file,".pdf",sep="")
@@ -1619,6 +1831,8 @@ sinklist <- "./html/basic structure of data collection.md"
 }
 
 
+
+# .html_graph function -------
 .html_graph<-function(graphfilepng, folder=NULL,caption=NULL, showfilename=TRUE){
    if (!is.null(folder)) graphfilepng <- paste0(folder, graphfilepng)
    #if (!is.null(caption) & showfilename) caption<-paste(caption, graphfilepng, sep="\n\n")
@@ -1631,10 +1845,14 @@ sinklist <- "./html/basic structure of data collection.md"
 }
 
 
+
+# .table function -------
 .table <- function (..., useNA = 'ifany') base::table(..., useNA = useNA)
 
 
 
+
+# .findanywhere function -------
 .findanywhere<-function(x, df){
    dfc<-ncol(df)
    tmke<-data.frame()
@@ -1646,8 +1864,12 @@ sinklist <- "./html/basic structure of data collection.md"
    return(list(tmke[,2],unique(tmke[,1]),tmke, table(tmke$col), names(df)[unique(tmke$col)]))
 }
 
+
+# .relevel function -------
 .relevel<-function(x) as.factor(as.character(x))
 
+
+# .getrefs function -------
 .getrefs<-function(filename){
    require(readr)
    mystring <- read_file(filename)
@@ -1679,14 +1901,20 @@ sinklist <- "./html/basic structure of data collection.md"
 
 
 
+
+# .openwd function -------
 .openwd<-function(){browseURL(getwd())}
 
+
+# .bu function -------
 .bu<-function(x=getwd()){
   require(rstudioapi)
     tmp <- x # gsub("[[:space:]]", "%20", x)
     if (substring(tolower(x), (nchar(tmp)-1), nchar(tmp)) == ".r") rstudioapi::navigateToFile(eval(tmp)) else browseURL(eval(tmp))
     }
 
+
+# .bmaster function -------
 .bmaster<-function(file, open=TRUE){  #assumes a global "master" df
    str<-paste(getwd(), master[file,1], sep="/")
    if (open) browseURL(eval(gsub("[[:space:]]", "%20", str))) else master[file,1]
@@ -1697,6 +1925,8 @@ sinklist <- "./html/basic structure of data collection.md"
 
 library(igraph)
 library(dplyr)
+
+# .curvedarrow function -------
 .curvedarrow<-function(x, y, ang=NULL, angoff=20, ce=c(20,20), col=4, wi=2, cu=-.75, circo=1, dir=TRUE, lwd=3, sh.lty=1, h.lty=1){
    require(igraph)
    iArrows <- igraph:::igraph.Arrows
@@ -1717,6 +1947,8 @@ library(dplyr)
           curve=cu, width=1.5, size=1.2,  sh.lty=sh.lty, h.lty=h.lty)
 }
 
+
+# .clean function -------
 .clean<-function(vect) {
    x <- as.character(vect)
    x <- tolower(x)
@@ -1733,6 +1965,8 @@ library(dplyr)
    x <-  gsub('\\)', '', x)
   return(x)}
 
+
+# .auths function -------
 .auths<-function(x){ #author order for endnote
 #x<-"Matthew M. McConnachie1*, Brian W. van Wilgen1, David M. Richardson1, Paul J. Ferraro2 and Aurelia T. Forsyth"
 # .clean
@@ -1774,12 +2008,16 @@ while (sink.number()>0) sink()
 file.show("outfile.txt")
    }
 
+
+# .polygon function -------
 .polygon<-function(xleft, xright, bottom, top, col="gray70", border=1, lwd=1){
    x1<-c(xleft, xright, xright, xleft, xleft)
    y1<-c(rep(bottom,2), rep(top, 2), bottom)
    polygon(x1,y1, col=col, border=border, lwd=lwd)
 }
 
+
+# .png function -------
 .png<-function(file, wd=NULL, open=TRUE, overwrite=TRUE){
       if (is.null(wd)) wd=getwd()
          ff<-paste(wd,"/",file,".png",sep="")
@@ -1810,6 +2048,8 @@ file.show("outfile.txt")
 # }
 
 
+
+# .rankabundance function -------
 .rankabundance<-function(x, proportion=FALSE, orderby=NULL){
    par(mar=c(8,5,1,1))
    if (proportion) {
@@ -1830,6 +2070,8 @@ file.show("outfile.txt")
 }
 
 
+
+# .pool function -------
 .pool<-function(df, bulk){
    prov<-as.character(bulk[1]); from<-as.numeric(bulk[2]); to=as.numeric(bulk[3])
    fr=which(df$code==paste(prov, from, sep=""))
@@ -1846,6 +2088,8 @@ file.show("outfile.txt")
 }
 
 
+
+# .qb function -------
 .qb<-function(r=1,c=1, baseht=7, pardefault=TRUE){
    if(c>r) maxwidth<-12.5 else maxwidth<-7
    (w<-c/r*baseht)
@@ -1860,6 +2104,8 @@ file.show("outfile.txt")
 
 
 
+
+# .ggplotreg function -------
 .ggplotreg <- function (fit) {
 
 require(ggplot2)
@@ -1875,6 +2121,8 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
 
 
 
+
+# .plotreg function -------
 .plotreg<-function(x, y, degree=1, lw=1.8,...){
    plot(x, y, pch=20)
    abline(t1<-lm(y~x), col=4, lw)
@@ -1891,14 +2139,20 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
    return(ret)
 }
 
+
+# .pa function -------
 .pa<-function(x) {.columnnum(x, pa=T)}
 
 # returns columns from a data frame/table that are numeric.  If pa=T, converts all non-zeros to 1
+
+# .columnnum function -------
 .columnnum<-function(x, pa=FALSE){
   x<-x[sapply(x, is.numeric) ]
   if (pa) x[x>0]<-1
    return(x)
 }
+
+# .toordinal function -------
 .toordinal<-function(x, char=TRUE){
    xx<-as.character(x)
    while (sum(nchar(xx)<max(nchar(xx)))>0)  xx[nchar(xx)<max(nchar(xx))]<-paste("0", xx[nchar(xx)<max(nchar(xx))], sep="")
@@ -1907,6 +2161,8 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
 }
 
 
+
+# .l function -------
 .l<-function(x){
    if (is.data.frame(x) | is.matrix(x)) ret<-nrow(x)
    if (is.vector(x)) ret<-length(x)
@@ -1916,6 +2172,8 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
 .plot<-function(...) plot(..., xlab="", ylab="", axes=FALSE, type="n") ## imported
 
 #Function to add a png
+
+# .drawpng function -------
 .drawpng <- function(label, image, x, y, ht, wd, ...) {
   require(png)
   require(grid)
@@ -1931,6 +2189,8 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
 }
 
 
+
+# .reshape2wide function -------
 .reshape2wide<-function(dframe, newrows, newcolumns, valuecolumn){
     df=as.data.frame(dframe[,c(which(names(dframe) %in% newrows),
                                which(names(dframe) %in% newcolumns),
@@ -1939,14 +2199,20 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
     return(dfwide)
 }
 
+
+# .emplot function -------
 .emplot<-function(x=1, y=1, yl=NULL) plot(x,y, type="n", axes=F, xlab="", ylab="", ylim=yl)
 
+
+# .ax function -------
 .ax <- function(bty="L", cex.axis=1.3, sides=c(1,2)){  ## JGTools
   ls <- ifelse(i %in% c(2,4), 2,1)
   for (i in sides) { axis(i, cex.axis=cex.axis, las=ifelse(i %in% c(2,4), 2,1)) }
   box(bty=bty, lwd=2)
 }
 
+
+# .mtx function -------
 .mtx<-function(x="", y="", ln=c(3,3), cex=1.4, sides=c(1,2), cl=c(1,1)){
   #is.null(x)
   txt <- c(x, y)
@@ -1960,6 +2226,8 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
 
 
 
+
+# .mtxx function -------
 .mtxx<-function(x,y, line1=3, line2=3, cex=1.4){
  #opar<-par()
  par(las=0)
@@ -1968,6 +2236,8 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
  #par(opar)
 }
 
+
+# .axx function -------
 .axx<-function(x=T, y=T, box=T, cex.axis=1.3){  ## JGTools
  if (x) axis(1, cex.axis=cex.axis)
  if (y) axis(2, las=2,cex.axis=cex.axis)
@@ -1975,6 +2245,8 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
 }
 
 
+
+# .codelevels function -------
 .codelevels<-function(dataset, colourfac=NULL, symbolfac=NULL, defsymbols=c(19,18,15, 17, 4, 1, 2, 6)){
 
   if (is.null(colourfac)){ colourfac1<-rep(1, length(colourfac)) } else {
@@ -2007,6 +2279,8 @@ ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) 
 
 
 
+
+# .hsdorder function -------
 .hsdorder<-function(hsdoutput, srt=NULL){
  #srt is not used -- currently sorting is alphabetical.  need to change
  #hsdoutput comes form package agricolae, function HSD.test (i.e. HSD.test(m_rgr, c("spp"), group=T))
@@ -2030,6 +2304,8 @@ return(mergetable)
 }
 
 
+
+# .histo function -------
 .histo<-function(histobj, col="light grey", inverse=F, xlim=NULL, ylim=NULL, add=F, axes=T,
                 xlab="", ylab="", freq=T, ysym=F)  {
   bre<-histobj$breaks; if (freq) den<-histobj$density else den<-histobj$counts
@@ -2043,6 +2319,8 @@ return(mergetable)
   }
 
 
+
+# .caic function -------
 .caic <- function(model) {
 
   sigma <- attr(VarCorr(model), 'sc')
@@ -2061,12 +2339,16 @@ return(mergetable)
 
 	}
 
+
+# .pd function -------
 .pd <- function(header=FALSE, aschar=T) {
   x <- read.table(pipe("pbpaste"), header=header)
   if (aschar) x <- as.data.frame(rapply(x, as.character, classes="factor", how="replace"), stringsAsFactors=F)
   if (ncol(x)==1) x <- as.vector(x[,1])
   return(x)}
 
+
+# .examplefile function -------
 .examplefile<-function(path2x) {
   library(png)
   x<-readPNG(path2x)
@@ -2075,6 +2357,8 @@ return(mergetable)
 }
 
 
+
+# .fac2char function -------
 .fac2char <- function(x) {
   x <- as.data.frame(rapply(x, as.character, classes="factor", how="replace"), stringsAsFactors=F)
   if (ncol(x)==1) x <- as.vector(x[,1])
@@ -2082,6 +2366,8 @@ return(mergetable)
 
 ## setwd("/Users/Jeff/Documents/Rworkfile/")
 ## options(device='quartz')
+
+# .qt function -------
 .qt<-function(x,y){quartz(height=x, width=y); par(mar=c(5,6,1,1))}
 
 .nn=function(x){as.numeric(as.vector(x))}
@@ -2091,6 +2377,8 @@ return(mergetable)
 
 .RSS=function(x){RSiteSearch(x)}
 .panes=function(x,y){ par(mfrow=c(x,y))}
+
+# .nameslook function -------
 .nameslook <- function(x) .adf(names(x))
 
 .fixednumber_old=function(prefix, tobeordered, seps="_"){
@@ -2113,6 +2401,8 @@ return(mergetable)
 #    if (!is.null(digits)) return(substring(nchar(ret[1])-digits+1,nchar(ret[1]), ret) ) else return(ret)
 # }
 #
+
+# .fixednumber function -------
 .fixednumber<-function(prefix, suffix, digits=NULL, suffappend=TRUE){
    mx<-max(nchar(suffix))
    while (any(nchar(suffix)<mx)) {
@@ -2165,12 +2455,16 @@ return(mergetable)
    names(df)=x
   return(df)}
 
+
+# .wordwrap function -------
 .wordwrap<-function(x,len) {
     ret<-c()
     for (i in 1:length(x)) { ret<-c(ret, paste(strwrap(x[i],width=len),collapse="\n"))}
     return(ret)
     }
 
+
+# .Caption function -------
 .Caption <- function(x, wd=66) { .wordwrap(paste(caption,"Created: ",date(), "  Path: ", paste(getwd(),filename, sep="/"), "  By: ", thisfile), wd) }
 
 #browseURL("/Users/Jeff/Documents/R/myfunctions/editR_function.R")
@@ -2189,6 +2483,8 @@ return(mergetable)
   }
 
 
+
+# .normalarea function -------
 .normalarea<-function(area=1, mean=0, sd=2, x=NULL){ #returns a data frame with normal curve x and y that integrates to area
    sdinput=sd
     i=1/area^.5
@@ -2199,6 +2495,8 @@ return(mergetable)
 }
 
 
+
+# .addImg function -------
 .addImg <- function(
   # pasted from https://stackoverflow.com/questions/27800307/adding-a-picture-to-plot-in-r
   obj, # an image file imported as an array (e.g. png::readPNG, jpeg::readJPEG)
@@ -2223,6 +2521,8 @@ return(mergetable)
 
 
 
+
+# .sigmoid function -------
 .sigmoid <- function(xrange=c(0,1), yrange=c(0,1), inflection=.5, decreasing=FALSE){
   xmax <- ifelse (length(xrange)==1, xrange, xrange[2])
   ymax <- ifelse (length(yrange)==1, yrange, yrange[2])
@@ -2244,6 +2544,8 @@ return(mergetable)
   return(data.frame(xout,yout))
 }
 
+
+# .knitrFunctions function -------
 .knitrFunctions <- function(){
   return(data.frame(mainFunctions=c(".wc", ".wk", ".wf", ".mkMD", ".s1", ".k1", ".write_md"),
              Desc=c("write phrase or number","writes kabler wrap","writes figure","writes mdFilename", "", "", "write to an existing .md and close sink")))
@@ -2254,6 +2556,8 @@ return(mergetable)
 
 
 # annotation tools
+
+# .mkMD function -------
 .mkMD <- function(filename=NULL, title=NULL, notes=NULL,open=FALSE, createnew=FALSE){
   print(filename)
   if (!is.null(filename) & !is.null(mdFilename) & createnew) {
@@ -2289,12 +2593,16 @@ return(mergetable)
 
 # use .mkMD WITH KABLE OR .sinkaddtxt(), followed by .sa()
 
+
+# .s1 function -------
 .s1 <- function(txt){
   .mkMD()
   .sinkaddtxt(txt)
   .sa()
 }
 
+
+# .k1 function -------
 .k1 <- function(txt){
   require("knitr")
   .mkMD()
@@ -2302,6 +2610,8 @@ return(mergetable)
   .sa()
 }
 
+
+# .write_md function -------
 .write_md <- function(content, filename=paste0("./html/", mdFilename,".Notes.md")){
   # Open the sink connection to the specified file
   sink(filename, append = TRUE)
@@ -2316,6 +2626,8 @@ return(mergetable)
 
 # .currentpath function ---------------------------------------------------
 
+
+# .currentpath function -------
 .currentpath <- function(folder=FALSE){
   require("rstudioapi")
   tf <- rstudioapi::getActiveDocumentContext()$path
@@ -2325,9 +2637,10 @@ return(mergetable)
 
 
 # .parens function --------------------------------------------------------
+
+# .parens function -------
 .parens <- function(x){
   txt <- paste0("(", x, ")")
   return(txt)
 }
-
 
