@@ -3,6 +3,37 @@
 
 # ggplot2 functions
 #browseURL(getwd())
+
+
+# .wl function (knitr, adds lines that wont conform to kable to md --------
+
+.wl <- function(content, mdFilename = NULL) {
+  if (is.null(mdFilename)) {
+    if (exists("mdFilename", envir = .GlobalEnv)) {
+      mdFilename <- get("mdFilename", envir = .GlobalEnv)
+    } else {
+      mdFilename <- "keep"
+      message("No mdFilename provided. Using default: 'keep'")
+    }
+  }
+
+  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+
+  # Capture output
+  out <- capture.output(print(content))  # Ensures summary() or any print method is handled
+  full_out <- c("", "", out, "", "")  # Pad for spacing
+
+  # Write to file
+  con <- file(filename, open = "a", encoding = "UTF-8")
+  on.exit(close(con))
+  writeLines(full_out, con = con, useBytes = TRUE)
+
+  # Also print to console
+  cat(paste(full_out, collapse = "\n"), "\n")
+  cat("Saved to:", filename, "\n")
+}
+
 # .wk function (knitr, adds content wrapped in kable to file mdFil --------
 
 .wk <- function(content, mdFilename = NULL, kab = TRUE) {
@@ -2245,8 +2276,8 @@ return(mergetable)
 }
 
 .knitrFunctions <- function(){
-  return(data.frame(mainFunctions=c(".wc", ".wk", ".wf", ".mkMD", ".s1", ".k1", ".write_md"),
-             Desc=c("write phrase or number","writes kabler wrap","writes figure","writes mdFilename", "", "", "write to an existing .md and close sink")))
+  return(data.frame(mainFunctions=c(".wc", ".wk", ".wf", ".wl", ".mkMD", ".s1", ".k1", ".write_md"),
+             Desc=c("write phrase or number","writes kabler wrap","writes figure", "writes lines from summary,etc.", "writes mdFilename", "", "", "write to an existing .md and close sink")))
 
 }
 # .knitrFunctions()

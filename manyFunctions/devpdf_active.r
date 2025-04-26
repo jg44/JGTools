@@ -1,10 +1,19 @@
 .devpdf <- function(file, pdfPath="graphs", openfile=FALSE, overwrite=FALSE, caption=NULL, powerpoint=TRUE, slidetitle=NULL,
                     png=TRUE, tf=NULL, meta=TRUE, NotesInput=FALSE, Notes="", history=TRUE, annotationsPath="./html/",
-                    pathtoMDeditor=NULL){
+                    pathtoMDeditor=NULL, currdir=getwd()){
+
     suppressWarnings(largestPdf <- as.numeric(gsub("\\D", "", substring(list.files(pdfPath), 1,2))))
     mxCur <- ifelse(((all(is.na(largestPdf))) || length(largestPdf)==0), 0, max(largestPdf, na.rm=TRUE))
 
-    require("rstudioapi")
+    newdir <- c("graphs", "html", "html/png", "html/images")
+
+    for (ii in 1:length(newdir)){
+      tmmpp <- paste0(currdir, "/", newdir[ii])
+      if (!dir.exists(tmmpp)) dir.create(tmmpp)
+      print(tmmpp)
+    }
+
+        require("rstudioapi")
     .getProjName <- function(){
          if (!is.null(rstudioapi::getActiveProject())){
           tmp <- strsplit(rstudioapi::getActiveProject(),"/")[[1]][length(strsplit(rstudioapi::getActiveProject(),"/")[[1]])]
@@ -138,6 +147,7 @@
         cat("\n")
         .sinkall()
     }
+    return(ff)
 }
 
 

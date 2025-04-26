@@ -3,7 +3,49 @@
 
 # ggplot2 functions
 #browseURL(getwd())
+
+# .viewPngs function ------------------------------------------------------
+
+.viewPngs <- function(pngs=NULL, fn="tmppngs"){
+  tmp <-  list.files("./html/images/")
+  if (is.null(pngs)) pngs <- 1:length(tmp)
+
+  for (i in pngs){
+    .wf(tmp[i], mdFilename = fn)
+  }
+  browseURL(paste0("./html/", fn, ".Notes.md"))
+
+}
+
 # .wk function (knitr, adds content wrapped in kable to file mdFil --------
+
+# .wl function
+.wl <- function(content, mdFilename = NULL) {
+  if (is.null(mdFilename)) {
+    if (exists("mdFilename", envir = .GlobalEnv)) {
+      mdFilename <- get("mdFilename", envir = .GlobalEnv)
+    } else {
+      mdFilename <- "keep"
+      message("No mdFilename provided. Using default: 'keep'")
+    }
+  }
+
+  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+
+  # Capture output
+  out <- capture.output(print(content))  # Ensures summary() or any print method is handled
+  full_out <- c("", "", out, "", "")  # Pad for spacing
+
+  # Write to file
+  con <- file(filename, open = "a", encoding = "UTF-8")
+  on.exit(close(con))
+  writeLines(full_out, con = con, useBytes = TRUE)
+
+  # Also print to console
+  cat(paste(full_out, collapse = "\n"), "\n")
+  cat("Saved to:", filename, "\n")
+}
 
 
 # .wk function -------
@@ -43,7 +85,6 @@
 .wk <- function(content, mdFilename = NULL, kab = TRUE) {
 
   require("knitr")
-
   if (is.null(mdFilename)) {
     if (exists("mdFilename", envir = .GlobalEnv)) {
       mdFilename <- get("mdFilename", envir = .GlobalEnv)
@@ -103,12 +144,12 @@
 }
 
 
-
-
 # .wf function ------------------------------------------------------------
 
-.wf <- function(content, fullpath=FALSE, mdFilename = NULL) {
+.wf <- function(content, notes=NULL, fullpath=FALSE, mdFilename = NULL) {
   require("knitr")
+  if (is.null(notes))  notes <- paste0("### ", content) else notes <-
+      paste0("#### ", content, "\n##### ", notes)
 
   if (is.null(mdFilename)) {
     if (exists("mdFilename", envir = .GlobalEnv)) {
@@ -132,6 +173,8 @@
   figpath <- gsub("\\.png\\.png", ".png", figpath)
 
   # Write with proper spacing
+  writeLines(c("", "", as.character(notes), "", ""),
+             con = con, sep = "\n", useBytes = TRUE)
   writeLines(c("", "", as.character(figpath), "", ""),
              con = con, sep = "\n", useBytes = TRUE)
   close(con)
@@ -140,7 +183,6 @@
   cat(paste0(figpath, collapse = "\n"))
   cat("\nSaved to: ", filename)
 }
-
 
 
 # themeJG function -------
