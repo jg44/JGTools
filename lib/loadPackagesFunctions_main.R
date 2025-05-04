@@ -49,7 +49,7 @@ options(knitr.table.format = "pipe")
 #source(sourceDropbox("https://www.dropbox.com/s/x85by9r4ho91mh3/markdown_html_functions.R?dl=0"))
 
 
-source("https://raw.githubusercontent.com/jg44/JGTools/master/manyFunctions/functionlist.r")
+source("https://raw.githubusercontent.com/jg44/JGTools/master/manyFunctions/functionlist_annotated.r")
 source("https://raw.githubusercontent.com/jg44/JGTools/master/manyFunctions/devpdf_active.r")
 source("https://raw.githubusercontent.com/jg44/JGTools/master/manyFunctions/markdown_html_functions.r")
 
