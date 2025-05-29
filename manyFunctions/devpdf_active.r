@@ -10,7 +10,7 @@
     for (ii in 1:length(newdir)){
       tmmpp <- paste0(currdir, "/", newdir[ii])
       if (!dir.exists(tmmpp)) dir.create(tmmpp)
-      print(tmmpp)
+    #  print(tmmpp)
     }
 
         require("rstudioapi")
@@ -147,8 +147,9 @@
         cat("\n")
         .sinkall()
     }
-    return(ff)
+    pngfilepath <- gsub(".pdf", ".png", ff)
+    return(pngfilepath)
 }
 
 
-
+# This now works with .devpdf("anyname") |> .wf()
