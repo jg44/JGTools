@@ -4,46 +4,29 @@
 # ggplot2 functions
 #browseURL(getwd())
 
+# .bc function ------------------------------------------------------
 
+.bc <- function(content, filename = "./config/breadcrumb.md", kab = FALSE, incDate=TRUE) {
+  require("knitr")
+  # leaves a breadcrumb of last touch
+  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
 
-# .format_anova function  ---------------------------------------------------------------------
+  # Prepare content to write
+  out <- as.character(content)
 
-.format_anova <- function(model, decPl=c(1,1,0,1,1,5)) {
-  require(dplyr)
-  require(knitr)
-  require(kableExtra)
+  if (incDate) full_out <- paste(c("#### ", format(Sys.time(), "%Y.%m.%e %H:%M - "), "", out, "", ""), collapse="") else full_out <- c("", "", out, "", "")
 
-  # Get anova output and convert to data frame
-  aov_tbl <- anova(model) %>% as.data.frame()
+  # Write to file
+  con <- file(filename, open = "a", encoding = "UTF-8")
+  on.exit(close(con))  # Ensure connection is closed even if error occurs
+  writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
 
-  # Preserve row names (usually the term names)
-  aov_tbl <- aov_tbl %>% tibble::rownames_to_column("Term")
-
-  signif_stars <- function(p) {
-    if (is.na(p)) return("")
-    else if (p < 0.001) return("***")
-    else if (p < 0.01) return("**")
-    else if (p < 0.05) return("*")
-    else if (p < 0.1) return(".")
-    else return("")
-  }
-
-  # Format columns
-  aov_tbl_fmt <- aov_tbl %>%
-    mutate(
-      NumDF = round(NumDF, decPl[3]),
-      DenDF = round(DenDF, decPl[4]),
-      `Sum Sq` = round(`Sum Sq`, decPl[1]),
-      `Mean Sq` = round(`Mean Sq`, decPl[2]),
-      `F value` = round(`F value`, decPl[5]),
-      `Pr(>F)` = formatC(`Pr(>F)`, digits = decPl[6], format = "f"),
-      Signif = sapply(as.numeric(`Pr(>F)`), signif_stars)
-    )
-
-  # Return formatted kable
-  # kable(aov_tbl_fmt, align = "r")
-  return(aov_tbl_fmt)
+  # Also write to console
+  cat(paste(full_out, collapse = "\n"), "\n")
+  cat("Saved to:", filename, "\n")
 }
+
+
 
 # .viewPngs function ------------------------------------------------------
 
@@ -154,7 +137,7 @@
 
 # .wc function (knitr, adds content text file mdFilename --------
 
-.wc <- function(content, mdFilename = NULL, kab = FALSE, incDate=FALSE) {
+.wc <- function(content, mdFilename = NULL, kab = FALSE) {
 
   require("knitr")
 
@@ -172,9 +155,7 @@
 
   # Prepare content to write
   out <- if (kab) as.character(kable(content)) else as.character(content)
-
-  if (incDate) full_out <- paste(c("#### ", format(Sys.time(), "%Y.%m.%e %H:%M - "), "", out, "", ""), collapse="") else full_out <- c("", "", out, "", "")
-
+  full_out <- c("", "", out, "", "")
 
   # Write to file
   con <- file(filename, open = "a", encoding = "UTF-8")
@@ -628,7 +609,7 @@ R.version
   pngfile <- gsub("/", "\\\\", pngfile)
 
   pngfile <- gsub(".pdf", ".png", pngfile)
-  x <- paste0('"C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe" -density 300 "', pdffile, '" -resize 40% "', pngfile)
+  x <- paste0('"C:\\Program Files\\ImageMagick-7.1.2-Q16-HDRI\\magick.exe" -density 300 "', pdffile, '" -resize 40% "', pngfile)
   system(x)
   print(pdffile)
   print(pngfile)
@@ -1154,8 +1135,8 @@ require(data.table)
 #.imptVars(T)
 
  # sapply(ls(), FUN=function(x) attributes(eval(parse(text=x))))
-.libraryInstallorLoad("rstudioapi")
-rstudioapi::getActiveDocumentContext()$path
+# .libraryInstallorLoad("rstudioapi")
+# rstudioapi::getActiveDocumentContext()$path
 
 #dirname(sys.frame(1)$ofile)
 
