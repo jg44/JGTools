@@ -140,9 +140,11 @@
 themeJG <- function() {
   theme_minimal() +
     theme(
-      text = element_text(size = 20),
+      text = element_text(size = 25),
       axis.text.y = element_text(margin = margin(r = 10)),  # Adjust space for y-axis text
       axis.title.y = element_text(margin = margin(r = 20, l = 20)),  # Increase space for y-axis label
+      axis.text.x = element_text(margin = margin(r = 10)),  # Adjust space for y-axis text
+      axis.title.x = element_text(margin = margin(r = 20, l = 20)),  # Increase space for y-axis label
       panel.grid.major = element_blank(),  # Remove major gridlines
       panel.grid.minor = element_blank(),  # Remove minor gridlines
       axis.line.x.bottom = element_line(color = "black"),  # Bottom axis line

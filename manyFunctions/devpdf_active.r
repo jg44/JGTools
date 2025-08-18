@@ -56,7 +56,7 @@
     #     if (overwrite & mxCur>0) mxCur <- mxCur-1
     #     nextNum <- formatC(mxCur, width = 2, format = "d", flag = "0")
     #     annotFilenameCheck <- paste0(nextNum, "_", ff, ".annot.md")
-    #     ff <- paste0(nextNum, "_", ff)
+    #     ff <- paste0(nextNum, "_", ff)	
     if (!any(list.dirs()=="./notesGraphAnnot")) dir.create("./notesGraphAnnot") #else print("")
     #overwrite <- FALSE
 
