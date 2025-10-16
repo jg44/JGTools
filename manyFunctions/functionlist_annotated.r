@@ -4,6 +4,42 @@
 # ggplot2 functions
 #browseURL(getwd())
 
+
+# .set_magick_path --------------------------------------------------------
+
+#' Set the path to ImageMagick's magick.exe
+#'
+#' @param path Full path to magick.exe (e.g., "C:/Program Files/ImageMagick-7.1.2-Q16-HDRI/magick.exe")
+#' @param file Optional path to where it should be stored (default = ~/AppData/Roaming/magickPath.txt)
+#' @return Invisibly returns TRUE if the path was written successfully
+.set_magick_path <- function(path, file = "~/AppData/Roaming/magickPath.txt") {
+  if (!file.exists(dirname(path))) {
+    warning("The specified magick.exe directory does not exist: ", dirname(path))
+  }
+  dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
+  writeLines(path, file)
+  message("ImageMagick path saved to: ", normalizePath(file, mustWork = FALSE))
+  invisible(TRUE)
+}
+
+
+#' Get the stored ImageMagick path
+#'
+#' @param file Optional path to the stored file (default = ~/AppData/Roaming/magickPath.txt)
+#' @return The stored ImageMagick path as a string, or NULL if not found
+.get_magick_path <- function(file = "~/AppData/Roaming/magickPath.txt") {
+  if (!file.exists(file)) {
+    warning("No stored ImageMagick path found at ", file)
+    return(NULL)
+  }
+  trimws(readLines(file, warn = FALSE)[1])
+}
+
+# set_magick_path("C:/Program Files/ImageMagick-7.1.2-Q16-HDRI/magick.exe")
+# get_magick_path()
+
+
+
 # .bc function ------------------------------------------------------
 
 .bc <- function(content, filename = "./config/breadcrumb.md", kab = FALSE, incDate=TRUE) {
@@ -600,7 +636,7 @@ R.version
 
 
 # .pdf2png function -------
-.pdf2png <- function(pdffile){
+.pdf2png <- function(pdffile, magick_path){
 
   if (!dir.exists("html")) dir.create("html")
     if (!dir.exists("html/images")) dir.create("html/images")
@@ -609,8 +645,23 @@ R.version
   pngfile <- gsub("/", "\\\\", pngfile)
 
   pngfile <- gsub(".pdf", ".png", pngfile)
-  x <- paste0('"C:\\Program Files\\ImageMagick-7.1.2-Q16-HDRI\\magick.exe" -density 300 "', pdffile, '" -resize 40% "', pngfile)
+
+
+  # Build the command
+  x <- sprintf('"%s" -density 300 "%s" -resize 40%% "%s"',
+               magick_path, pdffile, pngfile)
+
+  # Run it
   system(x)
+
+  # x <- paste0('"C:\\Program Files\\ImageMagick-7.1.2-Q16-HDRI\\magick.exe" -density 300 "', pdffile, '" -resize 40% "', pngfile)
+  #
+  # x <- sprintf('"%s" -density 300 "%s" -resize 40%% "%s"',
+  #              "C:\\Program Files\\ImageMagick-7.1.2-Q16-HDRI\\magick.exe",
+  #              pdffile, pngfile)
+  # system(x)
+  #
+  # system(x)
   print(pdffile)
   print(pngfile)
   return(pngfile)
