@@ -407,7 +407,7 @@ R.version
 
 
 # .gitbash function -------
-.gitbash <- function(wd=getwd(), gitpath="C:/Program Files/Git/git-bash.exe"){
+.gitbash <- function(wd=getwd(), gitpath="~/AppData/Local/Programs/Git/git-bash.exe"){
     if (wd=="rt") wd <- "C:/Users/jrg1035/GitProjects/JGTools/"
     print(wd)
     wd1 <- list.dirs()[grep('.git+$', list.dirs())]
