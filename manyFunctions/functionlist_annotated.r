@@ -428,8 +428,6 @@ R.version
 }
 
 
-}
-
 # .gitbash()
 .lastfile <- c("MASTERFILE.R")
 #getwd()
