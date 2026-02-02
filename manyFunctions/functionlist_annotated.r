@@ -407,15 +407,26 @@ R.version
 
 
 # .gitbash function -------
-.gitbash <- function(wd=getwd(), gitpath="~/AppData/Local/Programs/Git/git-bash.exe"){
-    if (wd=="rt") wd <- "C:/Users/jrg1035/GitProjects/JGTools/"
-    print(wd)
-    wd1 <- list.dirs()[grep('.git+$', list.dirs())]
-    (wduse <- gsub("/.git", "", wd1))
-    print(wd1)
-    wduse <- wd
-    system(wait=FALSE, eval( paste0("\"", gitpath, "\" --cd=", wduse)))
-    #system('"C:/Program Files/Git/git-bash.exe" --cd="C:/Users/jrg1035/GitProjects/r_ascc.insects.cz"', wait=FALSE)
+.gitbash <- function(wd = getwd(), gitpath = NULL) {
+    
+    # Resolve Git Bash path
+    if (is.null(gitpath) || gitpath == "") {
+        gitpath <- Sys.which("git-bash.exe")
+    }
+    
+    if (gitpath == "") {
+        stop("git-bash.exe not found on PATH")
+    }
+    
+    # Expand ~ and normalize path for Git Bash
+    wd <- path.expand(wd)
+    wduse <- normalizePath(wd, winslash = "/", mustWork = TRUE)
+    
+    # Launch Git Bash
+    cmd <- sprintf('"%s" --cd="%s"', gitpath, wduse)
+    system(cmd, wait = FALSE)
+}
+
 
 }
 
