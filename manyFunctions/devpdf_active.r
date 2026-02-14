@@ -38,6 +38,7 @@
       tmp <- "Unknown_project"
     return(tmp)
   }
+  print("FUNCTION UPDATED -- USED fig_save!")
 
   if (is.null(pathtoMDeditor))
     pathtoMDeditor <- "C:/Users/jrg1035/AppData/Local/Markdown Monster/MarkdownMonster.exe"
