@@ -1,0 +1,69 @@
+ 
+my_gg_theme = theme(
+	panel.background = element_rect(fill='white', colour='black'), 
+	panel.grid.major=element_blank(), 
+	panel.grid.minor= element_blank(), 
+	text=element_text(family="sans"), 
+	axis.text=element_text(size=15, color="black"),
+	axis.ticks = element_line(color = "black"), 
+	plot.title = element_text(hjust=0, size=20), 
+	axis.title = element_text(size=17), 
+	legend.title = element_blank(), 
+	legend.text = element_text(size = 19), 
+	strip.text = element_text(size = 15),
+	axis.title.x = element_text(margin = margin(t= 10)),
+	axis.title.y = element_text(margin = margin(r=10)),
+	legend.key = element_blank()
+	)
+
+my_gg_theme.def_size = theme(
+	panel.background = element_rect(fill='white', colour='black'), 
+	panel.grid.major=element_blank(), 
+	panel.grid.minor= element_blank(), 
+	text=element_text(family="sans"), 
+	axis.text=element_text(color="black"),
+	axis.ticks = element_line(color = "black"), 
+	plot.title = element_text(hjust=0), 
+	#axis.title = element_text(size=17), 
+	#legend.title = element_blank(), 
+	#legend.text = element_text(size = 19), 
+	#strip.text = element_text(size = 15),
+	axis.title.x = element_text(margin = margin(t= 10)),
+	axis.title.y = element_text(margin = margin(r=10)),
+	legend.key = element_blank()	
+)
+
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+twelvePaired <- c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928")
+
+c25 <- c(
+  "dodgerblue2", "#E31A1C", # red
+  "green4",
+  "#6A3D9A", # purple
+  "#FF7F00", # orange
+  "black", "gold1",
+  "skyblue2", "#FB9A99", # lt pink
+  "palegreen2",
+  "#CAB2D6", # lt purple
+  "#FDBF6F", # lt orange
+  "gray70", "khaki2",
+  "maroon", "orchid1", "deeppink1", "blue1", "steelblue4",
+  "darkturquoise", "green1", "yellow4", "yellow3",
+  "darkorange4", "brown"
+)
+
+fancy_scientific <- function(l) {
+    # turn in to character string in scientific notation
+    l <- format(l, scientific = TRUE)
+    #reformat zeros
+    l <- gsub("0e\\+00","0",l)
+    # quote the part before the exponent to keep all the digits
+    l <- gsub("^(.*)e", "'\\1'e", l)
+    # turn the 'e+' into plotmath format
+    l <- gsub("e", "%*%10^", l)
+    # return this as an expression
+    parse(text=l)
+}
