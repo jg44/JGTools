@@ -5,6 +5,21 @@
 #browseURL(getwd())
 
 
+# pipe to clipboard -------------------------------------------------------
+
+.str_clip <- function(x, ...) {
+  capture.output(str(x, ...)) |>
+    writeClipboard()
+  invisible(x)
+}
+
+.clip2 <- function(x, ...) {
+  capture.output(x) |>
+    writeClipboard()
+  invisible(x)
+}
+
+
 # .set_magick_path --------------------------------------------------------
 
 #' Set the path to ImageMagick's magick.exe
@@ -408,20 +423,20 @@ R.version
 
 # .gitbash function -------
 .gitbash <- function(wd = getwd(), gitpath = NULL) {
-    
+
     # Resolve Git Bash path
     if (is.null(gitpath) || gitpath == "") {
         gitpath <- Sys.which("git-bash.exe")
     }
-    
+
     if (gitpath == "") {
         stop("git-bash.exe not found on PATH")
     }
-    
+
     # Expand ~ and normalize path for Git Bash
     wd <- path.expand(wd)
     wduse <- normalizePath(wd, winslash = "/", mustWork = TRUE)
-    
+
     # Launch Git Bash
     cmd <- sprintf('"%s" --cd="%s"', gitpath, wduse)
     system(cmd, wait = FALSE)
