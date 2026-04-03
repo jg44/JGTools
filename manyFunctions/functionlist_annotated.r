@@ -5,6 +5,59 @@
 #browseURL(getwd())
 
 
+# .wopen -- send to .md ---------------------------------------------------
+.wopen <- function(content, mdFilename = NULL, kab = FALSE) {
+  require("knitr")
+
+  # Determine filename
+  if (is.null(mdFilename)) {
+    if (exists("mdFilename", envir = .GlobalEnv)) {
+      mdFilename <- get("mdFilename", envir = .GlobalEnv)
+    } else {
+      mdFilename <- "keep"
+      message("No mdFilename. Using 'keep'.")
+    }
+  }
+
+  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+
+  # Create/open persistent connection if it doesn't already exist
+  if (!exists(".wc_con", envir = .GlobalEnv)) {
+    assign(".wc_con",
+           file(filename, open = "a", encoding = "UTF-8"),
+           envir = .GlobalEnv)
+    message("Opened new write connection to: ", filename)
+  }
+
+  con <- get(".wc_con", envir = .GlobalEnv)
+
+  # Prepare output
+  out <- if (kab) as.character(kable(content)) else as.character(content)
+  full_out <- c("", "", out, "", "")
+
+  # Write to file
+  writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
+
+  # Also print to console
+  cat(paste(full_out, collapse = "\n"), "\n")
+  cat("Wrote to:", filename, "\n")
+}
+
+# .wclose -- close open .md file ------------------------------------------
+
+.w_close <- function() {
+  if (exists(".wc_con", envir = .GlobalEnv)) {
+    con <- get(".wc_con", envir = .GlobalEnv)
+    close(con)
+    rm(.wc_con, envir = .GlobalEnv)
+    message("Closed .wc file connection.")
+  } else {
+    message("No active .wc connection to close.")
+  }
+}
+
+
 # pipe to clipboard -------------------------------------------------------
 
 .str_clip <- function(x, ...) {
@@ -92,10 +145,23 @@
 
 }
 
-# .wk function (knitr, adds content wrapped in kable to file mdFil --------
 
-# .wl function
-.wl <- function(content, mdFilename = NULL) {
+# .w function (see .wc, .wk, .wf, and .wcode) -----------------------------
+
+.w <- function(content,
+               mdFilename = NULL,
+               mode = c("print", "raw", "figure"),
+               format = c("plain", "kable", "code"),
+               ti = NULL,
+               kab = FALSE,
+               notes = NULL,
+               fullpath = FALSE) {
+
+  require(knitr)
+
+  mode   <- match.arg(mode)
+  format <- match.arg(format)
+
   if (is.null(mdFilename)) {
     if (exists("mdFilename", envir = .GlobalEnv)) {
       mdFilename <- get("mdFilename", envir = .GlobalEnv)
@@ -108,156 +174,247 @@
   filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
   dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
 
-  # Capture output
-  out <- capture.output(print(content))  # Ensures summary() or any print method is handled
-  full_out <- c("", "", out, "", "")  # Pad for spacing
+  # ---- TITLE ----
+  title_block <- if (!is.null(ti) && nzchar(ti)) {
+    c("", paste0("## ", ti), "")
+  } else {
+    character(0)
+  }
 
-  # Write to file
+  # ---- MODE HANDLING ----
+  if (mode == "figure") {
+
+    if (is.null(notes)) {
+      notes <- paste0("### ", content)
+    } else {
+      notes <- paste0("#### ", content, "\n##### ", notes)
+    }
+
+    if (!fullpath) {
+      figpath <- paste0("![](images/", content, ".png)")
+    } else {
+      figpath <- paste0("![](", content, ".png)")
+    }
+
+    figpath <- gsub("\\.png\\.png", ".png", figpath)
+
+    full_out <- c("", notes, "", figpath, "")
+
+  } else {
+
+    # ---- CONTENT GENERATION ----
+    if (mode == "print") {
+      out <- capture.output(print(content))
+    } else {
+      out <- as.character(content)
+    }
+
+    if (format == "kable" || kab) {
+      out <- as.character(kable(content))
+    }
+
+    if (format == "code") {
+      out <- c("```r", out, "```")
+    }
+
+    full_out <- c("", title_block, out, "", "")
+  }
+
+  # ---- WRITE ----
   con <- file(filename, open = "a", encoding = "UTF-8")
   on.exit(close(con))
   writeLines(full_out, con = con, useBytes = TRUE)
 
-  # Also print to console
+  # ---- CONSOLE ----
   cat(paste(full_out, collapse = "\n"), "\n")
   cat("Saved to:", filename, "\n")
 }
 
 
-# .wk function -------
-.wk <- function(content, mdFilename = NULL, kab = TRUE) {
-
-  require("knitr")
-
-  if (is.null(mdFilename)) {
-    if (exists("mdFilename", envir = .GlobalEnv)) {
-      mdFilename <- get("mdFilename", envir = .GlobalEnv)
-    } else {
-      mdFilename <- "keep"
-      print("No mdFilename. using 'keep.'")
-    }
-  }
-
-  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
-  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
-
-  # Prepare content to write
-  out <- if (kab) as.character(kable(content)) else as.character(content)
-  full_out <- c("", "", out, "", "")
-
-  # Write to file
-  con <- file(filename, open = "a", encoding = "UTF-8")
-  on.exit(close(con))  # Ensure connection is closed even if error occurs
-  writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
-
-  # Also write to console
-  cat(paste(full_out, collapse = "\n"), "\n")
-  cat("Saved to:", filename, "\n")
+.wcode <- function(content, mdFilename = NULL, ti = "captured output") {
+  .w(content, mdFilename, mode = "print", format = "code", ti = ti)
 }
 
-# .wc function (knitr, adds content text file mdFilename --------
-
-# .wk function -------
-.wk <- function(content, mdFilename = NULL, kab = TRUE) {
-
-  require("knitr")
-  if (is.null(mdFilename)) {
-    if (exists("mdFilename", envir = .GlobalEnv)) {
-      mdFilename <- get("mdFilename", envir = .GlobalEnv)
-    } else {
-      mdFilename <- "keep"
-      print("No mdFilename. using 'keep.'")
-    }
-  }
-
-  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
-  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
-
-  # Prepare content to write
-  out <- if (kab) as.character(kable(content)) else as.character(content)
-  full_out <- c("", "", out, "", "")
-
-  # Write to file
-  con <- file(filename, open = "a", encoding = "UTF-8")
-  on.exit(close(con))  # Ensure connection is closed even if error occurs
-  writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
-
-  # Also write to console
-  cat(paste(full_out, collapse = "\n"), "\n")
-  cat("Saved to:", filename, "\n")
+.wc <- function(content, mdFilename = NULL, kab = FALSE, ti = NULL) {
+  .w(content, mdFilename, mode = "raw",
+     format = if (kab) "kable" else "plain", ti = ti)
 }
 
-# .wc function (knitr, adds content text file mdFilename --------
+.wk <- function(content, mdFilename = NULL, ti = NULL) {
+  .w(content, mdFilename, mode = "raw", format = "kable", ti = ti)
+}
 
-.wc <- function(content, mdFilename = NULL, kab = FALSE) {
-
-  require("knitr")
-
-  if (is.null(mdFilename)) {
-    if (exists("mdFilename", envir = .GlobalEnv)) {
-      mdFilename <- get("mdFilename", envir = .GlobalEnv)
-    } else {
-      mdFilename <- "keep"
-      print("No mdFilename. using 'keep.'")
-    }
-  }
-
-  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
-  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
-
-  # Prepare content to write
-  out <- if (kab) as.character(kable(content)) else as.character(content)
-  full_out <- c("", "", out, "", "")
-
-  # Write to file
-  con <- file(filename, open = "a", encoding = "UTF-8")
-  on.exit(close(con))  # Ensure connection is closed even if error occurs
-  writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
-
-  # Also write to console
-  cat(paste(full_out, collapse = "\n"), "\n")
-  cat("Saved to:", filename, "\n")
+.wf <- function(content, notes = NULL, fullpath = FALSE, mdFilename = NULL) {
+  .w(content, mdFilename, mode = "figure", notes = notes, fullpath = fullpath)
 }
 
 
-# .wf function ------------------------------------------------------------
+# .wk function (knitr, adds content wrapped in kable to file mdFil --------
 
-.wf <- function(content, notes=NULL, fullpath=FALSE, mdFilename = NULL) {
-  require("knitr")
-  if (is.null(notes))  notes <- paste0("### ", content) else notes <-
-      paste0("#### ", content, "\n##### ", notes)
-
-  if (is.null(mdFilename)) {
-    if (exists("mdFilename", envir = .GlobalEnv)) {
-      mdFilename <- get("mdFilename", envir = .GlobalEnv)
-    } else {
-      mdFilename <- "keep"
-      print("No mdFilename. using 'keep.'")
-    }
-  }
-
-  filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
-  dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
-
-
-  # Open file connection in append mode
-  con <- file(filename, open = "a", encoding = "UTF-8")
-
-  if (!fullpath) figpath <- paste0("![](images/", content, ".png)") else figpath <-
-    paste0("![](", content, ".png)")
-
-  figpath <- gsub("\\.png\\.png", ".png", figpath)
-
-  # Write with proper spacing
-  writeLines(c("", "", as.character(notes), "", ""),
-             con = con, sep = "\n", useBytes = TRUE)
-  writeLines(c("", "", as.character(figpath), "", ""),
-             con = con, sep = "\n", useBytes = TRUE)
-  close(con)
-
-  # Also write to console
-  cat(paste0(figpath, collapse = "\n"))
-  cat("\nSaved to: ", filename)
-}
+# # .wl function
+# .wl <- function(content, mdFilename = NULL) {
+#   if (is.null(mdFilename)) {
+#     if (exists("mdFilename", envir = .GlobalEnv)) {
+#       mdFilename <- get("mdFilename", envir = .GlobalEnv)
+#     } else {
+#       mdFilename <- "keep"
+#       message("No mdFilename provided. Using default: 'keep'")
+#     }
+#   }
+#
+#   filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+#   dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+#
+#   # Capture output
+#   out <- capture.output(print(content))  # Ensures summary() or any print method is handled
+#   full_out <- c("", "", out, "", "")  # Pad for spacing
+#
+#   # Write to file
+#   con <- file(filename, open = "a", encoding = "UTF-8")
+#   on.exit(close(con))
+#   writeLines(full_out, con = con, useBytes = TRUE)
+#
+#   # Also print to console
+#   cat(paste(full_out, collapse = "\n"), "\n")
+#   cat("Saved to:", filename, "\n")
+# }
+#
+#
+# # .wk function -------
+# .wk <- function(content, mdFilename = NULL, kab = TRUE) {
+#
+#   require("knitr")
+#
+#   if (is.null(mdFilename)) {
+#     if (exists("mdFilename", envir = .GlobalEnv)) {
+#       mdFilename <- get("mdFilename", envir = .GlobalEnv)
+#     } else {
+#       mdFilename <- "keep"
+#       print("No mdFilename. using 'keep.'")
+#     }
+#   }
+#
+#   filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+#   dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+#
+#   # Prepare content to write
+#   out <- if (kab) as.character(kable(content)) else as.character(content)
+#   full_out <- c("", "", out, "", "")
+#
+#   # Write to file
+#   con <- file(filename, open = "a", encoding = "UTF-8")
+#   on.exit(close(con))  # Ensure connection is closed even if error occurs
+#   writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
+#
+#   # Also write to console
+#   cat(paste(full_out, collapse = "\n"), "\n")
+#   cat("Saved to:", filename, "\n")
+# }
+#
+# # .wc function (knitr, adds content text file mdFilename --------
+#
+# # .wk function -------
+# .wk <- function(content, mdFilename = NULL, kab = TRUE) {
+#
+#   require("knitr")
+#   if (is.null(mdFilename)) {
+#     if (exists("mdFilename", envir = .GlobalEnv)) {
+#       mdFilename <- get("mdFilename", envir = .GlobalEnv)
+#     } else {
+#       mdFilename <- "keep"
+#       print("No mdFilename. using 'keep.'")
+#     }
+#   }
+#
+#   filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+#   dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+#
+#   # Prepare content to write
+#   out <- if (kab) as.character(kable(content)) else as.character(content)
+#   full_out <- c("", "", out, "", "")
+#
+#   # Write to file
+#   con <- file(filename, open = "a", encoding = "UTF-8")
+#   on.exit(close(con))  # Ensure connection is closed even if error occurs
+#   writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
+#
+#   # Also write to console
+#   cat(paste(full_out, collapse = "\n"), "\n")
+#   cat("Saved to:", filename, "\n")
+# }
+#
+# # .wc function (knitr, adds content text file mdFilename --------
+#
+# .wc <- function(content, mdFilename = NULL, kab = FALSE) {
+#
+#   require("knitr")
+#
+#   if (is.null(mdFilename)) {
+#     if (exists("mdFilename", envir = .GlobalEnv)) {
+#       mdFilename <- get("mdFilename", envir = .GlobalEnv)
+#     } else {
+#       mdFilename <- "keep"
+#       print("No mdFilename. using 'keep.'")
+#     }
+#   }
+#
+#   filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+#   dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+#
+#   # Prepare content to write
+#   out <- if (kab) as.character(kable(content)) else as.character(content)
+#   full_out <- c("", "", out, "", "")
+#
+#   # Write to file
+#   con <- file(filename, open = "a", encoding = "UTF-8")
+#   on.exit(close(con))  # Ensure connection is closed even if error occurs
+#   writeLines(full_out, con = con, sep = "\n", useBytes = TRUE)
+#
+#   # Also write to console
+#   cat(paste(full_out, collapse = "\n"), "\n")
+#   cat("Saved to:", filename, "\n")
+# }
+#
+#
+# # .wf function ------------------------------------------------------------
+#
+# .wf <- function(content, notes=NULL, fullpath=FALSE, mdFilename = NULL) {
+#   require("knitr")
+#   if (is.null(notes))  notes <- paste0("### ", content) else notes <-
+#       paste0("#### ", content, "\n##### ", notes)
+#
+#   if (is.null(mdFilename)) {
+#     if (exists("mdFilename", envir = .GlobalEnv)) {
+#       mdFilename <- get("mdFilename", envir = .GlobalEnv)
+#     } else {
+#       mdFilename <- "keep"
+#       print("No mdFilename. using 'keep.'")
+#     }
+#   }
+#
+#   filename <- file.path("html", paste0(mdFilename, ".Notes.md"))
+#   dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
+#
+#
+#   # Open file connection in append mode
+#   con <- file(filename, open = "a", encoding = "UTF-8")
+#
+#   if (!fullpath) figpath <- paste0("![](images/", content, ".png)") else figpath <-
+#     paste0("![](", content, ".png)")
+#
+#   figpath <- gsub("\\.png\\.png", ".png", figpath)
+#
+#   # Write with proper spacing
+#   writeLines(c("", "", as.character(notes), "", ""),
+#              con = con, sep = "\n", useBytes = TRUE)
+#   writeLines(c("", "", as.character(figpath), "", ""),
+#              con = con, sep = "\n", useBytes = TRUE)
+#   close(con)
+#
+#   # Also write to console
+#   cat(paste0(figpath, collapse = "\n"))
+#   cat("\nSaved to: ", filename)
+# }
 
 
 # themeJG function -------
